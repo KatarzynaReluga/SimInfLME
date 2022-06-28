@@ -26,7 +26,8 @@
 generate_re <- function(n,
                         dg,
                         scaling_factor,
-                        type = c("chisquare", "student_t")) {
+                        type = c("chisquare", "student_t"),
+                        start_seed = 1) {
 
   set.seed(start_seed)
 
