@@ -1,0 +1,33 @@
+---
+output: github_document
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  #fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+# SimInfME
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+## Overview
+
+Package **SimInfME** implements ...
+
+## Installation
+
+You can install the most recent version of **SimInfME** from [GitHub](https://github.com/)  
+
+```{r, eval = FALSE}
+# install.packages("devtools")
+# install.packages("remotes")
+
+
+```
+
+
