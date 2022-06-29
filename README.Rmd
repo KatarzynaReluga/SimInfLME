@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-Package **SimInfME** implements ...
+Package **SimInfLME** implements ...
 
 ## Installation
 
