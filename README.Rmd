@@ -21,7 +21,7 @@ Package **SimInfLME** implements ...
 
 ## Installation
 
-You can install the most recent version of **SimInfME** from [GitHub](https://github.com/)  
+You can install the most recent version of **SimInfLME** from [GitHub](https://github.com/)  
 
 ```{r, eval = FALSE}
 # install.packages("devtools")
