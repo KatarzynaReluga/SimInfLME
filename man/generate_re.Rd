@@ -4,7 +4,13 @@
 \alias{generate_re}
 \title{Generate centered and scaled random elements}
 \usage{
-generate_re(n, dg, scaling_factor, type = c("chisquare", "student_t"))
+generate_re(
+  n,
+  dg,
+  scaling_factor,
+  type = c("chisquare", "student_t", "normal"),
+  start_seed = 1
+)
 }
 \arguments{
 \item{n}{Number of observations}
@@ -14,7 +20,9 @@ generate_re(n, dg, scaling_factor, type = c("chisquare", "student_t"))
 \item{scaling_factor}{Scaling factor}
 
 \item{type}{Type of random element, \code{chisquare}: chi-squared distributed,
-\code{student_t}: Student's t-distributed}
+\code{student_t}: Student's t-distributed, \code{normal}: normally distributed}
+
+\item{start_seed}{Seed to reprodcue simulations}
 }
 \value{
 \item{random_elements}{Vector of random elements}
