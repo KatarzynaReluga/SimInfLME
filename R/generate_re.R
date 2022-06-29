@@ -4,7 +4,7 @@
 #' @param dg Degrees of freedom
 #' @param scaling_factor Scaling factor
 #' @param type Type of random element, \code{chisquare}: chi-squared distributed,
-#' \code{student_t}: Student's t-distributed
+#' \code{student_t}: Student's t-distributed, \code{normal}: normally distributed
 #' @param start_seed Seed to reprodcue simulations
 #'
 #' @importFrom stats rt rchisq
@@ -34,9 +34,12 @@ generate_re <- function(n,
   if (type == "chisquare") {
     random_elements <-
       ((rchisq(n, dg) - dg) / sqrt(2 * dg)) * scaling_factor
-  } else {
+  } else if (type == "student_t") {
     random_elements <-
       (rt(n, dg) / sqrt(dg / (dg - 2))) * scaling_factor
+  } else {
+    random_elements <-
+      rnorm(n, 0, scaling_factor)
   }
 
   return(random_elements)
