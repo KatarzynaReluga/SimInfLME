@@ -6,9 +6,9 @@
 \usage{
 generate_re(
   n,
-  dg,
+  dg = 5,
   scaling_factor,
-  type = c("chisquare", "student_t", "normal"),
+  type = c("chisquared", "student_t", "normal"),
   start_seed = 1
 )
 }

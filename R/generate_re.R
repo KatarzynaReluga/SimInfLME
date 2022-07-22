@@ -1,13 +1,16 @@
-#' Generate centered and scaled random elements
+#' Generate random elements
+#'
+#' Function to generate centered and scaled random elements from chi-squared,
+#' Student's t and normal distributions
 #'
 #' @param n Number of observations
 #' @param dg Degrees of freedom
 #' @param scaling_factor Scaling factor
 #' @param type Type of random element, \code{chisquare}: chi-squared distributed,
 #' \code{student_t}: Student's t-distributed, \code{normal}: normally distributed
-#' @param start_seed Seed to reprodcue simulations
+#' @param start_seed Seed to reproduce simulations
 #'
-#' @importFrom stats rt rchisq
+#' @importFrom stats rnorm rt rchisq
 #'
 #' @return \item{random_elements}{Vector of random elements}
 #'
@@ -24,9 +27,9 @@
 
 
 generate_re <- function(n,
-                        dg,
+                        dg = 5,
                         scaling_factor,
-                        type = c("chisquare", "student_t", "normal"),
+                        type = c("chisquared", "student_t", "normal"),
                         start_seed = 1) {
 
   set.seed(start_seed)

@@ -1,4 +1,4 @@
-Package: SimInfME
+Package: SimInfLME
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
@@ -9,7 +9,9 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Imports:
-	stats (>= 4.0.3)
+	stats (>= 4.0.3), 
+	lme4 (>= 1.1-29), 
+	postcAIC (>= 1.0.1)
 Suggests: 
     testthat (>= 3.0.0)
 RoxygenNote: 7.2.0

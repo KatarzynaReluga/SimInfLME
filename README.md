@@ -1,16 +1,16 @@
 
-# SimInfME
+# SimInfLME
 
 <!-- badges: start -->
 <!-- badges: end -->
 
 ## Overview
 
-Package **SimInfME** implements …
+Package **SimInfLME** implements …
 
 ## Installation
 
-You can install the most recent version of **SimInfME** from
+You can install the most recent version of **SimInfLME** from
 [GitHub](https://github.com/)
 
 ``` r
