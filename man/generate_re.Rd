@@ -2,7 +2,7 @@
 % Please edit documentation in R/generate_re.R
 \name{generate_re}
 \alias{generate_re}
-\title{Generate centered and scaled random elements}
+\title{Generate random elements}
 \usage{
 generate_re(
   n,
@@ -19,16 +19,17 @@ generate_re(
 
 \item{scaling_factor}{Scaling factor}
 
-\item{type}{Type of random element, \code{chisquare}: chi-squared distributed,
-\code{student_t}: Student's t-distributed, \code{normal}: normally distributed}
+\item{type}{Distribution of random element, \code{chisquare}: chi-squared distribution,
+\code{student_t}: Student's t-distribution, \code{normal}: normal distribution}
 
-\item{start_seed}{Seed to reprodcue simulations}
+\item{start_seed}{Seed to reproduce simulations}
 }
 \value{
 \item{random_elements}{Vector of random elements}
 }
 \description{
-Generate centered and scaled random elements
+Function to generate centered and scaled random effects or errors from chi-squared,
+Student's t or normal distributions
 }
 \examples{
 

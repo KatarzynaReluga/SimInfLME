@@ -4,7 +4,7 @@
 \alias{bootstrap_NERM}
 \alias{bootstrap_NERM.parametric}
 \alias{bootstrap_NERM.semiparametric}
-\title{Bootstrapping NERM}
+\title{Bootstrap NERM}
 \usage{
 bootstrap_NERM(...)
 
@@ -59,7 +59,7 @@ bootstrap_NERM(...)
 
 \item{data_sample}{Data frame}
 
-\item{id_cluster}{Vector with cluster covariate}
+\item{id_cluster}{Vector with cluster labels}
 
 \item{type_var_estimator}{Type of variance estimator}
 
@@ -71,20 +71,20 @@ bootstrap_NERM(...)
 }
 \value{
 List with following parameters
-\item{boot_NERMS}{bootstrap NERM samples}
-\item{fit_boot_NERMS}{fitted NERM models to bootstrap samples }
-\item{double_boot_NERMS}{double bootstrap NERM samples}
-\item{fit_double_boot_NERMS}{fitted NERM models to bootstrap samples}
+\item{boot_NERMS}{Bootstrap NERM samples}
+\item{fit_boot_NERMS}{Fitted NERM models to bootstrap samples}
+\item{double_boot_NERMS}{Double bootstrap NERM samples}
+\item{fit_double_boot_NERMS}{Fitted NERM models to double-bootstrap samples}
 }
 \description{
-This is a generic function used to generate bootstrap samples
+Generic function to generate bootstrap samples
 in a parametric or semiparametric way
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{parametric}: Generate bootstrap samples with notmally distribute
+\item \code{parametric}: Generate bootstrap samples in a parametric way
 
-\item \code{semiparametric}: Generate population with normally distributed outcomes
+\item \code{semiparametric}: Generate bootstrap samples in a semiparametric way
 }}
 
 \examples{
@@ -109,17 +109,17 @@ FUN = mean)[, -1])
 formula_y <-  y ~ -1 + X0 + X1 + (1| id_cluster)
 
 data_sample <- generate_NERM(generate_u = list(type = "chisquared",
-                                                    scaling_factor = 1,
-                                                    dg = 6),
-                                  generate_e = list(type = "chisquared",
-                                                    scaling_factor = 1,
-                                                    dg = 6),
-                                  beta = beta,
-                                  X = X,
-                                  id_cluster = id_cluster,
-                                  start_seed = 1,
-                                  no_sim = 1,
-                                  cluster_means = cluster_means)
+                                               scaling_factor = 1,
+                                               dg = 6),
+                             generate_e = list(type = "chisquared",
+                                               scaling_factor = 1,
+                                               dg = 6),
+                             beta = beta,
+                             X = X,
+                             id_cluster = id_cluster,
+                             start_seed = 1,
+                             no_sim = 1,
+                             cluster_means = cluster_means)
 
 
 
@@ -130,31 +130,31 @@ type_method = c("parametric")
 class(type_method) <- type_method
 
 bootstrap_NERM <- bootstrap_NERM(type_method,
-var_u_est = fitted_NERM$var_u,
-var_e_est = fitted_NERM$var_e,
-beta_est = fitted_NERM$beta_hat,
-boot_seed = 2,
-n_boot = 100, formula_y,
-data_sample = data_sample,
-id_cluster = id_cluster,
-cluster_means = cluster_means,
-type_var_estimator = "var")
+                                 var_u_est = fitted_NERM$var_u,
+                                 var_e_est = fitted_NERM$var_e,
+                                 beta_est = fitted_NERM$beta_hat,
+                                 boot_seed = 2,
+                                 n_boot = 100, formula_y,
+                                 data_sample = data_sample,
+                                 id_cluster = id_cluster,
+                                 cluster_means = cluster_means,
+                                 type_var_estimator = "var")
 
 type_method = c("semiparametric")
 class(type_method) <- type_method
 
 bootstrap_NERM <- bootstrap_NERM(type_method,
-var_u_est = fitted_NERM$var_u,
-var_e_est = fitted_NERM$var_e,
-empirical_u = fitted_NERM$u_hat,
-empirical_e = fitted_NERM$e_hat,
-beta_est = fitted_NERM$beta_hat,
-boot_seed = 2,
-n_boot = 100, formula_y,
-data_sample = data_sample,
-id_cluster = id_cluster,
-cluster_means = cluster_means,
-type_var_estimator = "var")
+                                 var_u_est = fitted_NERM$var_u,
+                                 var_e_est = fitted_NERM$var_e,
+                                 empirical_u = fitted_NERM$u_hat,
+                                 empirical_e = fitted_NERM$e_hat,
+                                 beta_est = fitted_NERM$beta_hat,
+                                 boot_seed = 2,
+                                 n_boot = 100, formula_y,
+                                 data_sample = data_sample,
+                                 id_cluster = id_cluster,
+                                 cluster_means = cluster_means,
+                                 type_var_estimator = "var")
 
 
 }

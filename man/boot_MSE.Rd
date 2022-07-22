@@ -6,7 +6,7 @@
 \alias{boot_MSE.mse_3t}
 \alias{boot_MSE.mse_spa}
 \alias{boot_MSE.mse_bc}
-\title{Bootstrap MSE estimators}
+\title{Bootstrap MSE}
 \usage{
 boot_MSE(...)
 
@@ -32,22 +32,23 @@ boot_MSE(...)
 \item{var_e_est}{Variance of errors}
 }
 \value{
-List with following parameters
-\item{mse_mixed}{mean squares error}
-\item{rmse_mixed}{Root mean squared error }
+List with following parameters:
+\item{mse_mixed}{Mean squared error}
+\item{rmse_mixed}{Root mean squared error}
 }
 \description{
-Generic function to obtain bootstrap MSE estimators
+Generic function to obtain bootstrap MSE estimates
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{mse_b}: Computes bootstrap mse estimator
+\item \code{mse_b}: Function to compute bootstrap MSE estimates
 
-\item \code{mse_3t}: Computes bootstrap three terms bootstrap mse
+\item \code{mse_3t}: Function to compute 3-term bootstrap MSE estimates
 
-\item \code{mse_spa}: Computes semiparametric bootstrap estimator
+\item \code{mse_spa}: Function to compute semiparametric bootstrap estimates
 
-\item \code{mse_bc}: Computes double bootstrap estimator
+\item \code{mse_bc}: Function to compute bias-corrected
+bootstrap MSE estimate
 }}
 
 \examples{
@@ -72,17 +73,17 @@ FUN = mean)[, -1])
 formula_y <-  y ~ -1 + X0 + X1 + (1| id_cluster)
 
 data_sample <- generate_NERM(generate_u = list(type = "chisquared",
-                                                    scaling_factor = 1,
-                                                    dg = 6),
-                                  generate_e = list(type = "chisquared",
-                                                    scaling_factor = 1,
-                                                    dg = 6),
-                                  beta = beta,
-                                  X = X,
-                                  id_cluster = id_cluster,
-                                  start_seed = 1,
-                                  no_sim = 1,
-                                  cluster_means = cluster_means)
+                                               scaling_factor = 1,
+                                               dg = 6),
+                             generate_e = list(type = "chisquared",
+                                               scaling_factor = 1,
+                                               dg = 6),
+                             beta = beta,
+                             X = X,
+                             id_cluster = id_cluster,
+                             start_seed = 1,
+                             no_sim = 1,
+                             cluster_means = cluster_means)
 
 
 
@@ -92,18 +93,18 @@ fitted_NERM <- fit_NERM(formula_y, data_sample,
 type_method = c("parametric")
 class(type_method) <- type_method
 
-# Bootstrap interval
+# Bootstrap MSE
 
 boot_samples <- bootstrap_NERM(type_method,
-var_u_est = fitted_NERM$var_u,
-var_e_est = fitted_NERM$var_e,
-beta_est = fitted_NERM$beta_hat,
-boot_seed = 2,
-n_boot = 100, formula_y,
-data_sample = data_sample,
-id_cluster = id_cluster,
-cluster_means = cluster_means,
-type_var_estimator = "mse_b")
+                               var_u_est = fitted_NERM$var_u,
+                               var_e_est = fitted_NERM$var_e,
+                               beta_est = fitted_NERM$beta_hat,
+                               boot_seed = 2,
+                               n_boot = 100, formula_y,
+                               data_sample = data_sample,
+                               id_cluster = id_cluster,
+                               cluster_means = cluster_means,
+                               type_var_estimator = "mse_b")
 
 type_var_estimator = "mse_b"
 class(type_var_estimator) <- "mse_b"
@@ -111,18 +112,18 @@ class(type_var_estimator) <- "mse_b"
 boot_mixed <- boot_MSE(type_var_estimator, boot_samples,
                        cluster_means, var_u_est, var_e_est)
 
-# Bias-corrected bootstrap interval
+# Bias-corrected bootstrap MSE
 
 boot_samples <- bootstrap_NERM(type_method,
-var_u_est = fitted_NERM$var_u,
-var_e_est = fitted_NERM$var_e,
-beta_est = fitted_NERM$beta_hat,
-boot_seed = 2,
-n_boot = 100, formula_y,
-data_sample = data_sample,
-id_cluster = id_cluster,
-cluster_means = cluster_means,
-type_var_estimator = "mse_bc")
+                               var_u_est = fitted_NERM$var_u,
+                               var_e_est = fitted_NERM$var_e,
+                               beta_est = fitted_NERM$beta_hat,
+                               boot_seed = 2,
+                               n_boot = 100, formula_y,
+                               data_sample = data_sample,
+                               id_cluster = id_cluster,
+                               cluster_means = cluster_means,
+                               type_var_estimator = "mse_bc")
 
 type_var_estimator = "mse_bc"
 class(type_var_estimator) <- "mse_bc"

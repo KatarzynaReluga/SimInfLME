@@ -10,8 +10,8 @@
 #' @param ... Additional parameters
 #'
 #' @return List with following parameters:
-#' \item{mse_mixed}{mean squared error}
-#' \item{rmse_mixed}{root mean squared error }
+#' \item{mse_mixed}{Mean squared error}
+#' \item{rmse_mixed}{Root mean squared error}
 #'
 #' @export
 #'
@@ -37,17 +37,17 @@
 #' formula_y <-  y ~ -1 + X0 + X1 + (1| id_cluster)
 #'
 #' data_sample <- generate_NERM(generate_u = list(type = "chisquared",
-#'                                                     scaling_factor = 1,
-#'                                                     dg = 6),
-#'                                   generate_e = list(type = "chisquared",
-#'                                                     scaling_factor = 1,
-#'                                                     dg = 6),
-#'                                   beta = beta,
-#'                                   X = X,
-#'                                   id_cluster = id_cluster,
-#'                                   start_seed = 1,
-#'                                   no_sim = 1,
-#'                                   cluster_means = cluster_means)
+#'                                                scaling_factor = 1,
+#'                                                dg = 6),
+#'                              generate_e = list(type = "chisquared",
+#'                                                scaling_factor = 1,
+#'                                                dg = 6),
+#'                              beta = beta,
+#'                              X = X,
+#'                              id_cluster = id_cluster,
+#'                              start_seed = 1,
+#'                              no_sim = 1,
+#'                              cluster_means = cluster_means)
 #'
 #'
 #'
@@ -60,15 +60,15 @@
 #' # Bootstrap MSE
 #'
 #' boot_samples <- bootstrap_NERM(type_method,
-#' var_u_est = fitted_NERM$var_u,
-#' var_e_est = fitted_NERM$var_e,
-#' beta_est = fitted_NERM$beta_hat,
-#' boot_seed = 2,
-#' n_boot = 100, formula_y,
-#' data_sample = data_sample,
-#' id_cluster = id_cluster,
-#' cluster_means = cluster_means,
-#' type_var_estimator = "mse_b")
+#'                                var_u_est = fitted_NERM$var_u,
+#'                                var_e_est = fitted_NERM$var_e,
+#'                                beta_est = fitted_NERM$beta_hat,
+#'                                boot_seed = 2,
+#'                                n_boot = 100, formula_y,
+#'                                data_sample = data_sample,
+#'                                id_cluster = id_cluster,
+#'                                cluster_means = cluster_means,
+#'                                type_var_estimator = "mse_b")
 #'
 #' type_var_estimator = "mse_b"
 #' class(type_var_estimator) <- "mse_b"
@@ -79,15 +79,15 @@
 #' # Bias-corrected bootstrap MSE
 #'
 #' boot_samples <- bootstrap_NERM(type_method,
-#' var_u_est = fitted_NERM$var_u,
-#' var_e_est = fitted_NERM$var_e,
-#' beta_est = fitted_NERM$beta_hat,
-#' boot_seed = 2,
-#' n_boot = 100, formula_y,
-#' data_sample = data_sample,
-#' id_cluster = id_cluster,
-#' cluster_means = cluster_means,
-#' type_var_estimator = "mse_bc")
+#'                                var_u_est = fitted_NERM$var_u,
+#'                                var_e_est = fitted_NERM$var_e,
+#'                                beta_est = fitted_NERM$beta_hat,
+#'                                boot_seed = 2,
+#'                                n_boot = 100, formula_y,
+#'                                data_sample = data_sample,
+#'                                id_cluster = id_cluster,
+#'                                cluster_means = cluster_means,
+#'                                type_var_estimator = "mse_bc")
 #'
 #' type_var_estimator = "mse_bc"
 #' class(type_var_estimator) <- "mse_bc"
@@ -95,6 +95,8 @@
 #' boot_mixed <- boot_MSE(type_var_estimator, boot_samples,
 #'                        cluster_means, var_u_est, var_e_est)
 #'
+
+
 boot_MSE <- function(...)
   UseMethod("boot_MSE")
 
@@ -106,18 +108,19 @@ boot_MSE <- function(...)
 
 
 boot_MSE.mse_b <- function(obj_var, boot_samples, ...) {
-
   boot_NERMS  = boot_samples$boot_NERMS
   fit_boot_NERMS  = boot_samples$fit_boot_NERMS
-  mu_matrix <- matrix(0, ncol = length(fit_boot_NERMS[[1]]$mu_hat),
+  mu_matrix <- matrix(0,
+                      ncol = length(fit_boot_NERMS[[1]]$mu_hat),
                       nrow = length(fit_boot_NERMS))
-  mu_hat_matrix <- matrix(0, ncol = length(fit_boot_NERMS[[1]]$mu_hat),
-                          nrow = length(fit_boot_NERMS))
+  mu_hat_matrix <-
+    matrix(0,
+           ncol = length(fit_boot_NERMS[[1]]$mu_hat),
+           nrow = length(fit_boot_NERMS))
 
   for (i in 1:length(boot_samples$boot_NERMS)) {
-
-    mu_matrix[i, ] <- unique(boot_NERMS[[i]]$mu)
-    mu_hat_matrix[i, ] <- fit_boot_NERMS[[i]]$mu_hat
+    mu_matrix[i,] <- unique(boot_NERMS[[i]]$mu)
+    mu_hat_matrix[i,] <- fit_boot_NERMS[[i]]$mu_hat
   }
 
   mse_mixed <- colMeans((mu_hat_matrix - mu_matrix) ^ 2)
@@ -136,46 +139,62 @@ boot_MSE.mse_b <- function(obj_var, boot_samples, ...) {
 #'
 
 
-boot_MSE.mse_3t <- function(obj_var, boot_samples,
+boot_MSE.mse_3t <- function(obj_var,
+                            boot_samples,
                             cluster_means,
-                            var_u_est, var_e_est, ...) {
-
+                            var_u_est,
+                            var_e_est,
+                            ...) {
   id_cluster <- boot_samples$boot_NERMS[[1]]$id_cluster
   fit_boot_NERMS <- boot_samples$fit_boot_NERMS
   data_sample <- boot_samples$boot_NERMS[[1]]
-  X <- format_data_matrix(data = data_sample, name_col = "X",
+  X <- format_data_matrix(data = data_sample,
+                          name_col = "X",
                           select_col = "x|X")
 
 
-  for (i in 1 : length(boot_samples$boot_NERMS)) {
+  for (i in 1:length(boot_samples$boot_NERMS)) {
     fit_boot_NERMS[[i]]$y_star <- boot_samples$boot_NERMS[[i]]$y
-    fit_boot_NERMS[[i]]$id_cluster <- boot_samples$boot_NERMS[[i]]$id_cluster
+    fit_boot_NERMS[[i]]$id_cluster <-
+      boot_samples$boot_NERMS[[i]]$id_cluster
   }
 
 
   # Compute bootstrap parameters
-  boot_params <- lapply(fit_boot_NERMS, compute_boot_params,var_e_est,
-                        var_u_est, cluster_means, X)
+  boot_params <-
+    lapply(fit_boot_NERMS,
+           compute_boot_params,
+           var_e_est,
+           var_u_est,
+           cluster_means,
+           X)
 
   # Compute mse 3 terms
-  mu_matrix <- matrix(0, ncol = length(fit_boot_NERMS[[1]]$mu_hat),
+  mu_matrix <- matrix(0,
+                      ncol = length(fit_boot_NERMS[[1]]$mu_hat),
                       nrow = length(fit_boot_NERMS))
 
-  mu_hat_boot_mixed_matrix <- matrix(0, ncol = length(fit_boot_NERMS[[1]]$mu_hat),
-                                     nrow = length(fit_boot_NERMS))
+  mu_hat_boot_mixed_matrix <-
+    matrix(0,
+           ncol = length(fit_boot_NERMS[[1]]$mu_hat),
+           nrow = length(fit_boot_NERMS))
 
-  mu_hat_boot_matrix <- matrix(0, ncol = length(fit_boot_NERMS[[1]]$mu_hat),
-                               nrow = length(fit_boot_NERMS))
+  mu_hat_boot_matrix <-
+    matrix(0,
+           ncol = length(fit_boot_NERMS[[1]]$mu_hat),
+           nrow = length(fit_boot_NERMS))
 
   for (i in 1:length(boot_samples$boot_NERMS)) {
-    mu_matrix[i, ] <- unique(boot_samples$boot_NERMS[[i]]$mu)
-    mu_hat_boot_mixed_matrix[i, ] <- boot_params[[i]]$mu_hat_boot_mixed
-    mu_hat_boot_matrix[i, ] <-  boot_params[[i]]$mu_hat_boot
+    mu_matrix[i,] <- unique(boot_samples$boot_NERMS[[i]]$mu)
+    mu_hat_boot_mixed_matrix[i,] <-
+      boot_params[[i]]$mu_hat_boot_mixed
+    mu_hat_boot_matrix[i,] <-  boot_params[[i]]$mu_hat_boot
   }
 
   mse_mixed = colMeans((mu_hat_boot_mixed_matrix - mu_matrix) ^ 2) +
     colMeans((mu_hat_boot_mixed_matrix - mu_hat_boot_matrix) ^ 2) +
-    2 * colMeans((mu_hat_boot_mixed_matrix - mu_matrix) * (mu_hat_boot_mixed_matrix - mu_hat_boot_matrix))
+    2 * colMeans((mu_hat_boot_mixed_matrix - mu_matrix) * (mu_hat_boot_mixed_matrix - mu_hat_boot_matrix)
+    )
 
   rmse_mixed = sqrt(mse_mixed)
 
@@ -194,62 +213,80 @@ boot_MSE.mse_3t <- function(obj_var, boot_samples,
 #'
 
 
-boot_MSE.mse_spa <- function(obj_var, boot_samples,
+boot_MSE.mse_spa <- function(obj_var,
+                             boot_samples,
                              cluster_means,
-                             var_u_est, var_e_est,...) {
-
+                             var_u_est,
+                             var_e_est,
+                             ...) {
   id_cluster <- boot_samples$boot_NERMS[[1]]$id_cluster
   fit_boot_NERMS <- boot_samples$fit_boot_NERMS
 
-  for (i in 1 : length(boot_samples$boot_NERMS)) {
+  for (i in 1:length(boot_samples$boot_NERMS)) {
     fit_boot_NERMS[[i]]$y_star <- boot_samples$boot_NERMS[[i]]$y
-    fit_boot_NERMS[[i]]$id_cluster <- boot_samples$boot_NERMS[[i]]$id_cluster
+    fit_boot_NERMS[[i]]$id_cluster <-
+      boot_samples$boot_NERMS[[i]]$id_cluster
   }
   data_sample <- boot_samples$boot_NERMS[[1]]
-  X <- format_data_matrix(data = data_sample, name_col = "X",
+  X <- format_data_matrix(data = data_sample,
+                          name_col = "X",
                           select_col = "x|X")
 
   # Compute bootstrap parameters
-  boot_params <- lapply(fit_boot_NERMS, compute_boot_params, var_e_est,
-                        var_u_est, cluster_means, X)
+  boot_params <-
+    lapply(fit_boot_NERMS,
+           compute_boot_params,
+           var_e_est,
+           var_u_est,
+           cluster_means,
+           X)
 
   g1 <- boot_params[[1]]$g1
   g2 <- boot_params[[1]]$g2
 
 
   # Compute mse 3 terms
-  mu_matrix <- matrix(0, ncol = length(fit_boot_NERMS[[1]]$mu_hat),
+  mu_matrix <- matrix(0,
+                      ncol = length(fit_boot_NERMS[[1]]$mu_hat),
                       nrow = length(fit_boot_NERMS))
 
-  mu_hat_boot_mixed_matrix <- matrix(0, ncol = length(fit_boot_NERMS[[1]]$mu_hat),
-                                     nrow = length(fit_boot_NERMS))
+  mu_hat_boot_mixed_matrix <-
+    matrix(0,
+           ncol = length(fit_boot_NERMS[[1]]$mu_hat),
+           nrow = length(fit_boot_NERMS))
 
-  mu_hat_boot_matrix <- matrix(0, ncol = length(fit_boot_NERMS[[1]]$mu_hat),
-                               nrow = length(fit_boot_NERMS))
+  mu_hat_boot_matrix <-
+    matrix(0,
+           ncol = length(fit_boot_NERMS[[1]]$mu_hat),
+           nrow = length(fit_boot_NERMS))
 
-  g1_boot <- matrix(0, ncol = length(fit_boot_NERMS[[1]]$mu_hat),
+  g1_boot <- matrix(0,
+                    ncol = length(fit_boot_NERMS[[1]]$mu_hat),
                     nrow = length(fit_boot_NERMS))
 
-  g2_boot <- matrix(0, ncol = length(fit_boot_NERMS[[1]]$mu_hat),
+  g2_boot <- matrix(0,
+                    ncol = length(fit_boot_NERMS[[1]]$mu_hat),
                     nrow = length(fit_boot_NERMS))
 
   for (i in 1:length(boot_samples$boot_NERMS)) {
-    mu_matrix[i, ] <- unique(boot_samples$boot_NERMS[[i]]$mu)
+    mu_matrix[i,] <- unique(boot_samples$boot_NERMS[[i]]$mu)
 
-    mu_hat_boot_mixed_matrix[i, ] <- boot_params[[i]]$mu_hat_boot_mixed
+    mu_hat_boot_mixed_matrix[i,] <-
+      boot_params[[i]]$mu_hat_boot_mixed
 
-    mu_hat_boot_matrix[i, ] <-  boot_params[[i]]$mu_hat_boot
+    mu_hat_boot_matrix[i,] <-  boot_params[[i]]$mu_hat_boot
 
-    g1_boot[i, ] <- boot_params[[i]]$g1_boot
+    g1_boot[i,] <- boot_params[[i]]$g1_boot
 
-    g2_boot[i, ] <- boot_params[[i]]$g2_boot
+    g2_boot[i,] <- boot_params[[i]]$g2_boot
   }
 
   g12_booot <-  colMeans(g1_boot + g2_boot)
 
   mse_mixed = 2 * (g1 + g2) - g12_booot +
     colMeans((mu_hat_boot_mixed_matrix - mu_hat_boot_matrix) ^ 2) +
-    2 * colMeans((mu_hat_boot_mixed_matrix - mu_matrix) * (mu_hat_boot_mixed_matrix - mu_hat_boot_matrix))
+    2 * colMeans((mu_hat_boot_mixed_matrix - mu_matrix) * (mu_hat_boot_mixed_matrix - mu_hat_boot_matrix)
+    )
 
   rmse_mixed = sqrt(mse_mixed)
 
@@ -269,26 +306,33 @@ boot_MSE.mse_spa <- function(obj_var, boot_samples,
 
 boot_MSE.mse_bc <- function(obj_var, boot_samples,
                             ...) {
-
-  # First order mse
+  # First order MSE
   var_obj_init <- "mse_b"
   class(var_obj_init) <- var_obj_init
 
   mse_b <- boot_MSE(obj_var = var_obj_init, boot_samples)$mse_mixed
 
-  # Second order mse
+  # Second order MSE
   double_boot_NERMS  = boot_samples$double_boot_NERMS
   fit_double_boot_NERMS  = boot_samples$fit_double_boot_NERMS
 
-  # Matrices mu
-  mu_db_matrix <- matrix(0, ncol = length(fit_double_boot_NERMS[[1]]$mu_hat),
-                         nrow = length(double_boot_NERMS))
-  mu_db_hat_matrix <- matrix(0, ncol = length(fit_double_boot_NERMS[[1]]$mu_hat),
-                             nrow = length(double_boot_NERMS))
+  # Matrices to collect mu
+  mu_db_matrix <-
+    matrix(
+      0,
+      ncol = length(fit_double_boot_NERMS[[1]]$mu_hat),
+      nrow = length(double_boot_NERMS)
+    )
+  mu_db_hat_matrix <-
+    matrix(
+      0,
+      ncol = length(fit_double_boot_NERMS[[1]]$mu_hat),
+      nrow = length(double_boot_NERMS)
+    )
 
   for (i in 1:length(boot_samples$double_boot_NERMS)) {
-    mu_db_matrix[i, ] <- unique(double_boot_NERMS[[i]]$mu)
-    mu_db_hat_matrix[i, ] <- fit_double_boot_NERMS[[i]]$mu_hat
+    mu_db_matrix[i,] <- unique(double_boot_NERMS[[i]]$mu)
+    mu_db_hat_matrix[i,] <- fit_double_boot_NERMS[[i]]$mu_hat
   }
 
   mse_bd <- colMeans((mu_db_hat_matrix - mu_db_matrix) ^ 2)
@@ -313,29 +357,42 @@ boot_MSE.mse_bc <- function(obj_var, boot_samples,
 }
 
 
-#' Compute bootstrap MSE estimators
+#' Compute bootstrap parameters
+#'
+#' Function to compute parameters from bootstrap samples
 #'
 #' @inheritParams generate_NERM
-#' @param fit_boot_NERMS List of paramaters with fitted values from NERM
+#' @param fit_boot_NERMS List of parameters with fitted values from NERM
 #' @param var_u_est Variance of random effects
 #' @param var_e_est Variance of errors
 #'
-#' @return List with mse estimates
+#' @return List with following parameters
+#' \item{mu_hat_boot_mixed}{Parameter mu computed with elements from an original sample and a bootstrap sample}
+#' \item{mu_hat_boot}{Parameter mu computed with elements from a bootstrap sample}
+#' \item{g1_boot}{Variance of bootstrap mixed effect}
+#' \item{g2_boot}{Adjustemnt factor for variance of bootstrap mixed effect}
+#' \item{g1}{Variance of mixed effect}
+#' \item{g2}{Adjustemnt factor for variance of mixed effect}
+#'
+#'
 #'
 #' @importFrom postcAIC create_Z
 #'
 #'
 #'
 
-compute_boot_params <- function(fit_boot_NERMS, var_e_est,
-                                var_u_est, cluster_means, X) {
-
+compute_boot_params <- function(fit_boot_NERMS,
+                                var_e_est,
+                                var_u_est,
+                                cluster_means,
+                                X) {
   # Clusters, Z matrix, n_d and m
   id_cluster  = fit_boot_NERMS$id_cluster
   Z = create_Z("NERM", id_cluster)
   n_d  = as.numeric(table(id_cluster))
   m = length(n_d)
   n_total = length(id_cluster)
+
   # Bootstrap quantities
   var_u_boot  = fit_boot_NERMS$var_u
   var_e_boot  = fit_boot_NERMS$var_e
@@ -348,7 +405,8 @@ compute_boot_params <- function(fit_boot_NERMS, var_e_est,
   G_boot = var_u_boot * diag(m)
 
   V_boot <- R_boot + kronecker(G_boot,  matrix(1, n_d, n_d))
-  solve_V_boot <- 1 / var_e_boot * diag(n_total) - kronecker(diag(m) * gamma_boot * 1 / (n_d * var_e_boot), matrix(1, n_d, n_d))
+  solve_V_boot <-
+    1 / var_e_boot * diag(n_total) - kronecker(diag(m) * gamma_boot * 1 / (n_d * var_e_boot), matrix(1, n_d, n_d))
 
   y_star <- fit_boot_NERMS$y_star
 
@@ -357,7 +415,7 @@ compute_boot_params <- function(fit_boot_NERMS, var_e_est,
   g2_boot <- numeric(m)
 
   for (i in 1:m) {
-    g2_boot[i] = t(temp1_g2_boot[i, ]) %*% temp2_g2_boot %*% (temp1_g2_boot[i, ])
+    g2_boot[i] = t(temp1_g2_boot[i,]) %*% temp2_g2_boot %*% (temp1_g2_boot[i,])
   }
 
   # NERM quantities
@@ -372,33 +430,33 @@ compute_boot_params <- function(fit_boot_NERMS, var_e_est,
   g2 <- numeric(m)
 
   for (i in 1:m) {
-    g2[i] = t(temp1_g1[i, ]) %*% temp2_g1 %*% (temp1_g1[i, ])
+    g2[i] = t(temp1_g1[i,]) %*% temp2_g1 %*% (temp1_g1[i,])
   }
 
 
-  beta_mixed <- crossprod(t(tcrossprod(solve(
-    crossprod(t(crossprod(X, solve_V)), X)
-  ), X)), crossprod(solve_V, y_star))
+  beta_mixed <- crossprod(t(tcrossprod(solve(crossprod(
+    t(crossprod(X, solve_V)), X
+  )), X)), crossprod(solve_V, y_star))
 
 
   mu_hat_boot_mixed <- crossprod(t(cluster_means), beta_mixed) +
-    crossprod(t(tcrossprod(G_est, Z)), crossprod(solve_V, (
-      y_star - crossprod(t(X), beta_mixed)
-    )))
+    crossprod(t(tcrossprod(G_est, Z)), crossprod(solve_V, (y_star - crossprod(t(
+      X
+    ), beta_mixed))))
 
   mu_hat_boot <- crossprod(t(cluster_means), beta_boot) +
-    crossprod(t(tcrossprod(G_boot, Z)), crossprod(solve_V_boot, (
-      y_star - crossprod(t(X), beta_boot)
-    )))
+    crossprod(t(tcrossprod(G_boot, Z)), crossprod(solve_V_boot, (y_star - crossprod(t(
+      X
+    ), beta_boot))))
 
-  output <- list(mu_hat_boot_mixed = mu_hat_boot_mixed,
-                 mu_hat_boot = mu_hat_boot,
-                 g1_boot = g1_boot,
-                 g2_boot = g2_boot,
-                 g1 = g1,
-                 g2 = g2)
+  output <- list(
+    mu_hat_boot_mixed = mu_hat_boot_mixed,
+    mu_hat_boot = mu_hat_boot,
+    g1_boot = g1_boot,
+    g2_boot = g2_boot,
+    g1 = g1,
+    g2 = g2
+  )
   return(output)
 
 }
-
-

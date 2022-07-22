@@ -11,23 +11,23 @@ fit_NERM(formula_y, data_sample, id_cluster, cluster_means)
 
 \item{data_sample}{Data frame}
 
-\item{id_cluster}{Vector with cluster covariate}
+\item{id_cluster}{Vector with cluster labels}
 
 \item{cluster_means}{Cluster-level covariates for fixed parameters}
 }
 \value{
-List with following parameters
+List with following parameters:
 \item{var_u}{Estimated variance of random effects}
 \item{var_e}{Estimated variance of errors}
 \item{beta_hat}{Estimated regression parameters}
-\item{u_hat}{Estimated mixed effects}
+\item{u_hat}{Estimated random effects}
 \item{mu_hat}{Estimated mixed effects}
 \item{e_hat}{Estimated errors}
 \item{mse}{Analytical mse}
-\item{g1}{Anlytical variance of mixed effect}
+\item{g1}{Analytical variance of mixed effect}
 }
 \description{
-Fit nested error regression model
+Function to fit nested error regression model
 }
 \examples{
 
@@ -51,16 +51,17 @@ FUN = mean)[, -1])
 formula_y <-  y ~ 1 + X1 + (1| id_cluster)
 
 data_sample <- generate_NERM(generate_u = list(type = "chisquared",
-                                                    scaling_factor = 1,
-                                                    dg = 6),
-                                  generate_e = list(type = "chisquared",
-                                                    scaling_factor = 1,
-                                                    dg = 6),
-                                  beta = beta,
-                                  X = X,
-                                  id_cluster = id_cluster,
-                                  start_seed = 1,
-                                  no_sim = 1, cluster_means)
+                                               scaling_factor = 1,
+                                               dg = 6),
+                             generate_e = list(type = "chisquared",
+                                               scaling_factor = 1,
+                                               dg = 6),
+                             beta = beta,
+                             X = X,
+                             id_cluster = id_cluster,
+                             start_seed = 1,
+                             no_sim = 1,
+                             cluster_means)
 
 
 fitted_NERM <- fit_NERM(formula_y, data_sample,

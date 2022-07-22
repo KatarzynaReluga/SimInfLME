@@ -2,12 +2,12 @@
 % Please edit documentation in R/boot_MSE.R
 \name{compute_boot_params}
 \alias{compute_boot_params}
-\title{Compute bootstrap MSE estimators}
+\title{Compute bootstrap parameters}
 \usage{
 compute_boot_params(fit_boot_NERMS, var_e_est, var_u_est, cluster_means, X)
 }
 \arguments{
-\item{fit_boot_NERMS}{List of paramaters with fitted values from NERM}
+\item{fit_boot_NERMS}{List of parameters with fitted values from NERM}
 
 \item{var_e_est}{Variance of errors}
 
@@ -18,8 +18,14 @@ compute_boot_params(fit_boot_NERMS, var_e_est, var_u_est, cluster_means, X)
 \item{X}{Matrix with covariates}
 }
 \value{
-List with mse estimates
+List with following parameters
+\item{mu_hat_boot_mixed}{Parameter mu computed with elements from an original sample and a bootstrap sample}
+\item{mu_hat_boot}{Parameter mu computed with elements from a bootstrap sample}
+\item{g1_boot}{Variance of bootstrap mixed effect}
+\item{g2_boot}{Adjustemnt factor for variance of bootstrap mixed effect}
+\item{g1}{Variance of mixed effect}
+\item{g2}{Adjustemnt factor for variance of mixed effect}
 }
 \description{
-Compute bootstrap MSE estimators
+Function to compute parameters from bootstrap samples
 }

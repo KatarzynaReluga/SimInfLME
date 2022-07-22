@@ -3,7 +3,7 @@
 \name{construct_intLME}
 \alias{construct_intLME}
 \alias{construct_intLME.NERM}
-\title{Intervals for linear mixed models}
+\title{Intervals for linear mixed models under NERM}
 \usage{
 construct_intLME(...)
 
@@ -36,13 +36,22 @@ construct_intLME(...)
 
 \item{cluster_means}{Cluster-level covariates for fixed parameters}
 
-\item{id_cluster}{Vector with cluster covariate}
+\item{id_cluster}{Vector with cluster labels}
 
-\item{alpha}{Alpha level to cosntruct intervals}
+\item{alpha}{Level alpha to construct intervals}
 
 \item{n_boot}{Number of bootstrap samples, default n_boot = 1000}
 
 \item{boot_seed}{Vector with cluster labels}
+}
+\value{
+List with following parameters:
+\item{int_up}{Upper boundary of individual interval}
+\item{int_down}{Lower boundary of individual interval}
+\item{length_int}{Length of individual interval}
+\item{int_sim_up}{Upper boundary of simultaneous interval}
+\item{int_sim_down}{Lower boundary of simultaneous interval}
+\item{length_sim}{Length of simulaneous interval}
 }
 \description{
 Generic function to construct individual and simultaneous intervals
@@ -75,29 +84,29 @@ FUN = mean)[, -1])
 formula_y <-  y ~ -1 + X0 + X1 + (1| id_cluster)
 
 data_sample <- generate_NERM(generate_u = list(type = "chisquared",
-                                                    scaling_factor = 1,
-                                                    dg = 6),
-                                  generate_e = list(type = "chisquared",
-                                                    scaling_factor = 1,
-                                                    dg = 6),
-                                  beta = beta,
-                                  X = X,
-                                  id_cluster = id_cluster,
-                                  start_seed = 1,
-                                  no_sim = 1,
-                                  cluster_means = cluster_means)
+                                               scaling_factor = 1,
+                                               dg = 6),
+                             generate_e = list(type = "chisquared",
+                                               scaling_factor = 1,
+                                               dg = 6),
+                             beta = beta,
+                             X = X,
+                             id_cluster = id_cluster,
+                             start_seed = 1,
+                             no_sim = 1,
+                             cluster_means = cluster_means)
 
 model_obj = c("NERM")
 # For now, only NERM is supported, but other model choices can be easily programmed
 class(model_obj) <- model_obj
 
 construct_LMEintervals <- construct_intLME(model_obj,
-                          type_method = c("parametric"),
-                          type_var_estimator = c("mse_bc"),
-                          formula_y, data_sample,
-                          cluster_means = cluster_means, id_cluster,
-                          alpha = 0.05, n_boot = 100,
-                          boot_seed = 1)
+                                           type_method = c("parametric"),
+                                           type_var_estimator = c("mse_bc"),
+                                           formula_y, data_sample,
+                                           cluster_means = cluster_means, id_cluster,
+                                           alpha = 0.05, n_boot = 100,
+                                           boot_seed = 1)
 
 
 }

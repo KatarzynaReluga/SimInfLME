@@ -19,16 +19,18 @@ generate_NERM(
 \arguments{
 \item{generate_u}{List to generate random effects, that is
 \itemize{
-\item scaling_factor
-\item type
-\item dg
+\item scaling_factor -- scaling factor
+\item type -- distribution of random element, \code{chisquare}: chi-squared distribution,
+\code{student_t}: Student's t-distribution, \code{normal}: normal distribution
+\item dg -- degrees of freedom.
 }}
 
 \item{generate_e}{List to generate random effects, that is
 \itemize{
-\item scaling_factor
-\item type
-\item dg
+\item scaling_factor -- scaling factor
+\item type -- distribution of random element, \code{chisquare}: chi-squared distribution,
+\code{student_t}: Student's t-distribution, \code{normal}: normal distribution
+\item dg -- degrees of freedom.
 }}
 
 \item{beta}{Vector with fixed parameters}
@@ -37,7 +39,7 @@ generate_NERM(
 
 \item{cluster_means}{Cluster-level covariates for fixed parameters}
 
-\item{id_cluster}{Vector with cluster covariate}
+\item{id_cluster}{Vector with cluster labels}
 
 \item{start_seed}{Starting seed}
 
@@ -46,10 +48,10 @@ generate_NERM(
 \item{return_u}{Return random effects? Default: return_u = FALSE}
 }
 \value{
-\item{samples}{Data frame or list with data frames with samples}
+\item{samples}{Data frame or list with data frames with samples from NERM}
 }
 \description{
-Function to generate data samples with outcomes from nested errors regression model (NERM)
+Function to generate data samples with outcomes from nested error regression model (NERM)
 in a parametric way
 }
 \examples{

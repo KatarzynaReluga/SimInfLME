@@ -2,7 +2,7 @@
 % Please edit documentation in R/construct_intervals.R
 \name{construct_intervals}
 \alias{construct_intervals}
-\title{Construct intervals for linear mixed effects}
+\title{Intervals for linear mixed effects}
 \usage{
 construct_intervals(
   type_method = c("parametric", "semiparametric", "analytical"),
@@ -31,9 +31,9 @@ construct_intervals(
 
 \item{cluster_means}{Cluster-level covariates for fixed parameters}
 
-\item{id_cluster}{Vector with cluster covariate}
+\item{id_cluster}{Vector with cluster labels}
 
-\item{alpha}{Alpha level to cosntruct intervals}
+\item{alpha}{Level alpha to construct intervals}
 
 \item{n_boot}{Number of bootstrap samples, default n_boot = 1000}
 
@@ -42,12 +42,19 @@ construct_intervals(
 \item{...}{Additional parameters}
 }
 \value{
-List with individual and simultaneous intervals, and their length
+List with following parameters:
+\item{int_up}{Upper boundary of individual interval}
+\item{int_down}{Lower boundary of individual interval}
+\item{length_int}{Length of individual interval}
+\item{int_sim_up}{Upper boundary of simultaneous interval}
+\item{int_sim_down}{Lower boundary of simultaneous interval}
+\item{length_sim}{Length of simulaneous interval}
 }
 \description{
 Function construct_intLME is a wrapper function to
 construct simultaneous and individual intervals for
-linear mixed effects
+linear mixed effects. For the moment, only NERM is implemented,
+but the function can be easily extended to other model types
 }
 \examples{
 
@@ -84,44 +91,44 @@ data_sample <- generate_NERM(generate_u = list(type = "chisquared",
                              cluster_means = cluster_means)
 
 intervals_3t <- construct_intervals(type_method = c("parametric"),
-                                 type_var_estimator = c("mse_3t"),
-                                 model_type = c("NERM"),
-                                 formula_y, data_sample,
-                                 cluster_means = cluster_means,
-                                 id_cluster = id_cluster,
-                                 alpha = 0.05,
-                                 n_boot = 1000,
-                                 boot_seed = 1)
+                                    type_var_estimator = c("mse_3t"),
+                                    model_type = c("NERM"),
+                                    formula_y, data_sample,
+                                    cluster_means = cluster_means,
+                                    id_cluster = id_cluster,
+                                    alpha = 0.05,
+                                    n_boot = 100,
+                                    boot_seed = 1)
 
 
 intervals_bc <- construct_intervals(type_method = c("parametric"),
-                                 type_var_estimator = c("mse_bc"),
-                                 model_type = c("NERM"),
-                                 formula_y, data_sample,
-                                 cluster_means = cluster_means,
-                                 id_cluster = id_cluster,
-                                 alpha = 0.05,
-                                 n_boot = 1000,
-                                 boot_seed = 1)
+                                    type_var_estimator = c("mse_bc"),
+                                    model_type = c("NERM"),
+                                    formula_y, data_sample,
+                                    cluster_means = cluster_means,
+                                    id_cluster = id_cluster,
+                                    alpha = 0.05,
+                                    n_boot = 100,
+                                    boot_seed = 1)
 
 intervals_b <- construct_intervals(type_method = c("parametric"),
-                                 type_var_estimator = c("mse_b"),
-                                 model_type = c("NERM"),
-                                 formula_y, data_sample,
-                                 cluster_means = cluster_means,
-                                 id_cluster = id_cluster,
-                                 alpha = 0.05,
-                                 n_boot = 1000,
-                                 boot_seed = 1)
+                                   type_var_estimator = c("mse_b"),
+                                   model_type = c("NERM"),
+                                   formula_y, data_sample,
+                                   cluster_means = cluster_means,
+                                   id_cluster = id_cluster,
+                                   alpha = 0.05,
+                                   n_boot = 100,
+                                   boot_seed = 1)
 
 intervals_spa <- construct_intervals(type_method = c("parametric"),
-                                 type_var_estimator = c("mse_spa"),
-                                 model_type = c("NERM"),
-                                 formula_y, data_sample,
-                                 cluster_means = cluster_means,
-                                 id_cluster = id_cluster,
-                                 alpha = 0.05,
-                                 n_boot = 1000,
-                                 boot_seed = 1)
+                                     type_var_estimator = c("mse_spa"),
+                                     model_type = c("NERM"),
+                                     formula_y, data_sample,
+                                     cluster_means = cluster_means,
+                                     id_cluster = id_cluster,
+                                     alpha = 0.05,
+                                     n_boot = 100,
+                                     boot_seed = 1)
 
 }

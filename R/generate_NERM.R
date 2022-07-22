@@ -5,26 +5,28 @@
 #'
 #' @param generate_u List to generate random effects, that is
 #' \itemize{
-#'  \item scaling_factor
-#'  \item type
-#'  \item dg
+#'  \item scaling_factor -- scaling factor
+#'  \item type -- distribution of random element, \code{chisquare}: chi-squared distribution,
+#'  \code{student_t}: Student's t-distribution, \code{normal}: normal distribution
+#'  \item dg -- degrees of freedom.
 #' }
 #' @param generate_e List to generate random effects, that is
 #' \itemize{
-#'  \item scaling_factor
-#'  \item type
-#'  \item dg
+#'  \item scaling_factor -- scaling factor
+#'  \item type -- distribution of random element, \code{chisquare}: chi-squared distribution,
+#'  \code{student_t}: Student's t-distribution, \code{normal}: normal distribution
+#'  \item dg -- degrees of freedom.
 #' }
 #' @param beta Vector with fixed parameters
 #' @param X Matrix with covariates
-#' @param id_cluster Vector with cluster covariates
+#' @param id_cluster Vector with cluster labels
 #' @param no_sim Number of samples
 #' @param start_seed Starting seed
 #' @param cluster_means Cluster-level covariates for fixed parameters
 #' @param return_u Return random effects? Default: return_u = FALSE
 #'
 #' @return
-#' \item{samples}{Data frame or list with data frames with samples}
+#' \item{samples}{Data frame or list with data frames with samples from NERM}
 #'
 #' @export
 #'
@@ -74,9 +76,7 @@ generate_NERM <- function(generate_u = list(type = "chisquared",
                           start_seed = 1,
                           no_sim = 10,
                           return_u = FALSE) {
-
   generate_sample_wrapper <- function(start_seed, return_u) {
-
     set.seed(start_seed)
 
     re_u <- generate_re(
@@ -123,5 +123,3 @@ generate_NERM <- function(generate_u = list(type = "chisquared",
 
   }
 }
-
-

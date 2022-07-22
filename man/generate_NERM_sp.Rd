@@ -33,7 +33,7 @@ generate_NERM_sp(
 
 \item{cluster_means}{Cluster-level covariates for fixed parameters}
 
-\item{id_cluster}{Vector with cluster covariate}
+\item{id_cluster}{Vector with cluster labels}
 
 \item{start_seed}{Starting seed}
 
@@ -42,10 +42,10 @@ generate_NERM_sp(
 \item{return_u}{Return random effects? Default: return_u = FALSE}
 }
 \value{
-\item{samples}{Data frame or list with data frames with samples}
+\item{samples}{Data frame or list with data frames with samples from NERM}
 }
 \description{
-Function to generate data samples with outcomes from nested errors regression model (NERM)
+Function to generate data samples with outcomes from nested error regression model (NERM)
 in a semiparametric way
 }
 \examples{
@@ -70,17 +70,17 @@ FUN = mean)[, -1])
 formula_y <-  y ~ 1 + X1 + (1| id_cluster)
 
 data_sample <- generate_NERM(generate_u = list(type = "chisquared",
-                                                    scaling_factor = 1,
-                                                    dg = 6),
-                                  generate_e = list(type = "chisquared",
-                                                    scaling_factor = 1,
-                                                    dg = 6),
-                                  beta = beta,
-                                  X = X,
-                                  cluster_means,
-                                  id_cluster = id_cluster,
-                                  start_seed = 1,
-                                  no_sim = 1)
+                                               scaling_factor = 1,
+                                               dg = 6),
+                             generate_e = list(type = "chisquared",
+                                              scaling_factor = 1,
+                                              dg = 6),
+                             beta = beta,
+                             X = X,
+                             cluster_means,
+                             id_cluster = id_cluster,
+                             start_seed = 1,
+                             no_sim = 1)
 
 
 fitted_NERM <- fit_NERM(formula_y, data_sample,

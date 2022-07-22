@@ -43,16 +43,17 @@
 #' formula_y <-  y ~ 1 + X1 + (1| id_cluster)
 #'
 #' data_sample <- generate_NERM(generate_u = list(type = "chisquared",
-#'                                                     scaling_factor = 1,
-#'                                                     dg = 6),
-#'                                   generate_e = list(type = "chisquared",
-#'                                                     scaling_factor = 1,
-#'                                                     dg = 6),
-#'                                   beta = beta,
-#'                                   X = X,
-#'                                   id_cluster = id_cluster,
-#'                                   start_seed = 1,
-#'                                   no_sim = 1, cluster_means)
+#'                                                scaling_factor = 1,
+#'                                                dg = 6),
+#'                              generate_e = list(type = "chisquared",
+#'                                                scaling_factor = 1,
+#'                                                dg = 6),
+#'                              beta = beta,
+#'                              X = X,
+#'                              id_cluster = id_cluster,
+#'                              start_seed = 1,
+#'                              no_sim = 1,
+#'                              cluster_means)
 #'
 #'
 #' fitted_NERM <- fit_NERM(formula_y, data_sample,
@@ -60,12 +61,14 @@
 #'
 
 
-fit_NERM <- function(formula_y, data_sample,
-                     id_cluster, cluster_means) {
-
+fit_NERM <- function(formula_y,
+                     data_sample,
+                     id_cluster,
+                     cluster_means) {
   m = length(as.numeric(table(id_cluster)))
   id_cluster = data_sample$id_cluster
-  X <- format_data_matrix(data = data_sample, name_col = "X",
+  X <- format_data_matrix(data = data_sample,
+                          name_col = "X",
                           select_col = "x|X")
 
   fit_y = lmer(formula_y, data = data_sample)
@@ -74,26 +77,33 @@ fit_NERM <- function(formula_y, data_sample,
   beta_hat = matrix(t(fixef(fit_y)), ncol = 1, nrow = 2)
   u_hat = as.vector(unlist(ranef(fit_y)))
   mu_hat = crossprod(t(cluster_means), beta_hat) + u_hat
-#  e_hat = data_sample$y - (fitted(fit_y) + rep(u_hat, as.numeric(table(id_cluster))))
   e_hat = data_sample$y - (predict(fit_y) + rep(u_hat, as.numeric(table(id_cluster))))
 
   C_cluster <- cbind(cluster_means, diag(m))
 
   #Compute analytical MSE
-  mse = compute_corrected_mse(C_cluster = C_cluster,
-                              X = X,
-                              sig_u = var_u,
-                              sig_e = var_e,
-                              clusterID = id_cluster)$mse
+  mse = compute_corrected_mse(
+    C_cluster = C_cluster,
+    X = X,
+    sig_u = var_u,
+    sig_e = var_e,
+    clusterID = id_cluster
+  )$mse
 
   temp = var_u / (var_u + var_e / as.numeric(table(id_cluster)))
 
   # Compute g1
   g1 = (1 - temp) * var_u
 
-  output <- list(var_u = var_u, var_e = var_e,
-                 beta_hat = beta_hat, u_hat = u_hat,
-                 mu_hat = mu_hat, e_hat = e_hat,
-                 mse = mse, g1 = g1)
+  output <- list(
+    var_u = var_u,
+    var_e = var_e,
+    beta_hat = beta_hat,
+    u_hat = u_hat,
+    mu_hat = mu_hat,
+    e_hat = e_hat,
+    mse = mse,
+    g1 = g1
+  )
   return(output)
 }

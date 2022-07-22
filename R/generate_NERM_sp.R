@@ -10,7 +10,7 @@
 #' @param var_e_est Estimated errors of random effects
 #
 #' @return
-#' \item{samples}{Data frame or list with data frames with samples}
+#' \item{samples}{Data frame or list with data frames with samples from NERM}
 #'
 #' @export
 #'
@@ -36,17 +36,17 @@
 #' formula_y <-  y ~ 1 + X1 + (1| id_cluster)
 #'
 #' data_sample <- generate_NERM(generate_u = list(type = "chisquared",
-#'                                                     scaling_factor = 1,
-#'                                                     dg = 6),
-#'                                   generate_e = list(type = "chisquared",
-#'                                                     scaling_factor = 1,
-#'                                                     dg = 6),
-#'                                   beta = beta,
-#'                                   X = X,
-#'                                   cluster_means,
-#'                                   id_cluster = id_cluster,
-#'                                   start_seed = 1,
-#'                                   no_sim = 1)
+#'                                                scaling_factor = 1,
+#'                                                dg = 6),
+#'                              generate_e = list(type = "chisquared",
+#'                                               scaling_factor = 1,
+#'                                               dg = 6),
+#'                              beta = beta,
+#'                              X = X,
+#'                              cluster_means,
+#'                              id_cluster = id_cluster,
+#'                              start_seed = 1,
+#'                              no_sim = 1)
 #'
 #'
 #' fitted_NERM <- fit_NERM(formula_y, data_sample,
@@ -65,8 +65,10 @@
 #'
 
 
-generate_NERM_sp <- function(empirical_u, var_u_est,
-                             empirical_e, var_e_est,
+generate_NERM_sp <- function(empirical_u,
+                             var_u_est,
+                             empirical_e,
+                             var_e_est,
                              beta,
                              X,
                              cluster_means,
@@ -74,16 +76,13 @@ generate_NERM_sp <- function(empirical_u, var_u_est,
                              start_seed = 1,
                              no_sim = 10,
                              return_u = FALSE) {
-
-
   generate_sample_wrapper <- function(start_seed, return_mu = FALSE) {
-
     set.seed(start_seed)
 
     u_scale = empirical_u * sqrt(var_u_est) / sqrt(mean(empirical_u ^ 2))
     u_scale_center = u_scale - mean(u_scale)
     u_star = sample(u_scale_center, length(unique(id_cluster)),
-                         replace = TRUE)
+                    replace = TRUE)
     re_u_repeat <- rep(u_star, as.numeric(table(id_cluster)))
 
     e_scale = empirical_e * sqrt(var_e_est) / sqrt(mean(empirical_e ^ 2))
@@ -94,8 +93,6 @@ generate_NERM_sp <- function(empirical_u, var_u_est,
     y  = X %*% beta + re_u_repeat + re_e
     mu = crossprod(t(cluster_means), beta) + u_star
     mu_repeat <- rep(mu, as.numeric(table(id_cluster)))
-
-
 
     if (return_u) {
       data_sample <- data.frame(y, X, id_cluster, mu = mu_repeat,
@@ -118,5 +115,3 @@ generate_NERM_sp <- function(empirical_u, var_u_est,
 
   }
 }
-
-
