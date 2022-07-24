@@ -10,7 +10,7 @@ construct_intLME(...)
 \method{construct_intLME}{NERM}(
   model_obj,
   type_method = c("parametric", "semiparametric", "analytical"),
-  type_var_estimator = c("var", "mse_a", "mse_b", "mse_3t", "mse_spa", "mse_bc"),
+  type_var_estimator = c("var_mixed", "mse_a", "mse_b", "mse_3t", "mse_spa", "mse_bc"),
   formula_y,
   data_sample,
   cluster_means,
@@ -46,9 +46,10 @@ construct_intLME(...)
 }
 \value{
 List with following parameters:
+\item{mu_hat}{Estimated mixed effects}
 \item{int_up}{Upper boundary of individual interval}
 \item{int_down}{Lower boundary of individual interval}
-\item{length_int}{Length of individual interval}
+\item{length_ind}{Length of individual interval}
 \item{int_sim_up}{Upper boundary of simultaneous interval}
 \item{int_sim_down}{Lower boundary of simultaneous interval}
 \item{length_sim}{Length of simulaneous interval}

@@ -21,10 +21,10 @@ compute_boot_params(fit_boot_NERMS, var_e_est, var_u_est, cluster_means, X)
 List with following parameters
 \item{mu_hat_boot_mixed}{Parameter mu computed with elements from an original sample and a bootstrap sample}
 \item{mu_hat_boot}{Parameter mu computed with elements from a bootstrap sample}
-\item{g1_boot}{Variance of bootstrap mixed effect}
-\item{g2_boot}{Adjustemnt factor for variance of bootstrap mixed effect}
-\item{g1}{Variance of mixed effect}
-\item{g2}{Adjustemnt factor for variance of mixed effect}
+\item{var_mixed_boot}{Variance of bootstrap mixed effect}
+\item{af_var_mixed_boot}{Adjustemnt factor for variance of bootstrap mixed effect}
+\item{var_mixed}{Variance of mixed effect}
+\item{af_var_mixed}{Adjustemnt factor for variance of mixed effect}
 }
 \description{
 Function to compute parameters from bootstrap samples

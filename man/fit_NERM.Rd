@@ -24,7 +24,7 @@ List with following parameters:
 \item{mu_hat}{Estimated mixed effects}
 \item{e_hat}{Estimated errors}
 \item{mse}{Analytical mse}
-\item{g1}{Analytical variance of mixed effect}
+\item{var_mixed}{Analytical variance of mixed effect}
 }
 \description{
 Function to fit nested error regression model

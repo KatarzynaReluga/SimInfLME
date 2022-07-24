@@ -17,7 +17,7 @@
 #' \item{mu_hat}{Estimated mixed effects}
 #' \item{e_hat}{Estimated errors}
 #' \item{mse}{Analytical mse}
-#' \item{g1}{Analytical variance of mixed effect}
+#' \item{var_mixed}{Analytical variance of mixed effect}
 #'
 #' @export
 #'
@@ -81,19 +81,19 @@ fit_NERM <- function(formula_y,
 
   C_cluster <- cbind(cluster_means, diag(m))
 
-  #Compute analytical MSE
+  #Compute analytical bias-corrected MSE
   mse = compute_corrected_mse(
     C_cluster = C_cluster,
     X = X,
     sig_u = var_u,
     sig_e = var_e,
     clusterID = id_cluster
-  )$mse
+  )$mse_corrected
 
   temp = var_u / (var_u + var_e / as.numeric(table(id_cluster)))
 
-  # Compute g1
-  g1 = (1 - temp) * var_u
+  # Compute var_mixed
+  var_mixed = (1 - temp) * var_u
 
   output <- list(
     var_u = var_u,
@@ -103,7 +103,7 @@ fit_NERM <- function(formula_y,
     mu_hat = mu_hat,
     e_hat = e_hat,
     mse = mse,
-    g1 = g1
+    var_mixed = var_mixed
   )
   return(output)
 }

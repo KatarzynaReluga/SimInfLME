@@ -241,8 +241,8 @@ boot_MSE.mse_spa <- function(obj_var,
            cluster_means,
            X)
 
-  g1 <- boot_params[[1]]$g1
-  g2 <- boot_params[[1]]$g2
+  var_mixed <- boot_params[[1]]$var_mixed
+  af_var_mixed <- boot_params[[1]]$af_var_mixed
 
 
   # Compute mse 3 terms
@@ -260,11 +260,11 @@ boot_MSE.mse_spa <- function(obj_var,
            ncol = length(fit_boot_NERMS[[1]]$mu_hat),
            nrow = length(fit_boot_NERMS))
 
-  g1_boot <- matrix(0,
+  var_mixed_boot <- matrix(0,
                     ncol = length(fit_boot_NERMS[[1]]$mu_hat),
                     nrow = length(fit_boot_NERMS))
 
-  g2_boot <- matrix(0,
+  af_var_mixed_boot <- matrix(0,
                     ncol = length(fit_boot_NERMS[[1]]$mu_hat),
                     nrow = length(fit_boot_NERMS))
 
@@ -276,14 +276,14 @@ boot_MSE.mse_spa <- function(obj_var,
 
     mu_hat_boot_matrix[i,] <-  boot_params[[i]]$mu_hat_boot
 
-    g1_boot[i,] <- boot_params[[i]]$g1_boot
+    var_mixed_boot[i,] <- boot_params[[i]]$var_mixed_boot
 
-    g2_boot[i,] <- boot_params[[i]]$g2_boot
+    af_var_mixed_boot[i,] <- boot_params[[i]]$af_var_mixed_boot
   }
 
-  g12_booot <-  colMeans(g1_boot + g2_boot)
+  var_mixed2_boot <-  colMeans(var_mixed_boot + af_var_mixed_boot)
 
-  mse_mixed = 2 * (g1 + g2) - g12_booot +
+  mse_mixed = 2 * (var_mixed + af_var_mixed) - var_mixed2_boot +
     colMeans((mu_hat_boot_mixed_matrix - mu_hat_boot_matrix) ^ 2) +
     2 * colMeans((mu_hat_boot_mixed_matrix - mu_matrix) * (mu_hat_boot_mixed_matrix - mu_hat_boot_matrix)
     )
@@ -369,10 +369,10 @@ boot_MSE.mse_bc <- function(obj_var, boot_samples,
 #' @return List with following parameters
 #' \item{mu_hat_boot_mixed}{Parameter mu computed with elements from an original sample and a bootstrap sample}
 #' \item{mu_hat_boot}{Parameter mu computed with elements from a bootstrap sample}
-#' \item{g1_boot}{Variance of bootstrap mixed effect}
-#' \item{g2_boot}{Adjustemnt factor for variance of bootstrap mixed effect}
-#' \item{g1}{Variance of mixed effect}
-#' \item{g2}{Adjustemnt factor for variance of mixed effect}
+#' \item{var_mixed_boot}{Variance of bootstrap mixed effect}
+#' \item{af_var_mixed_boot}{Adjustemnt factor for variance of bootstrap mixed effect}
+#' \item{var_mixed}{Variance of mixed effect}
+#' \item{af_var_mixed}{Adjustemnt factor for variance of mixed effect}
 #'
 #'
 #'
@@ -399,7 +399,7 @@ compute_boot_params <- function(fit_boot_NERMS,
   beta_boot = fit_boot_NERMS$beta_hat
 
   gamma_boot = var_u_boot / (var_u_boot + var_e_boot / n_d)
-  g1_boot  = (1 - gamma_boot) * var_u_boot
+  var_mixed_boot  = (1 - gamma_boot) * var_u_boot
 
   R_boot = var_e_boot * diag(n_total)
   G_boot = var_u_boot * diag(m)
@@ -410,12 +410,12 @@ compute_boot_params <- function(fit_boot_NERMS,
 
   y_star <- fit_boot_NERMS$y_star
 
-  temp1_g2_boot = cluster_means - gamma_boot * cluster_means
-  temp2_g2_boot = solve(crossprod(X, crossprod(solve_V_boot, X)))
-  g2_boot <- numeric(m)
+  temp1_af_var_mixed_boot = cluster_means - gamma_boot * cluster_means
+  temp2_af_var_mixed_boot = solve(crossprod(X, crossprod(solve_V_boot, X)))
+  af_var_mixed_boot <- numeric(m)
 
   for (i in 1:m) {
-    g2_boot[i] = t(temp1_g2_boot[i,]) %*% temp2_g2_boot %*% (temp1_g2_boot[i,])
+    af_var_mixed_boot[i] = t(temp1_af_var_mixed_boot[i,]) %*% temp2_af_var_mixed_boot %*% (temp1_af_var_mixed_boot[i,])
   }
 
   # NERM quantities
@@ -423,14 +423,14 @@ compute_boot_params <- function(fit_boot_NERMS,
   solve_V = 1 / var_e_est * diag(n_total) - kronecker(diag(m) * gamma_est * 1 / (n_d * var_e_est), matrix(1, n_d, n_d))
   G_est = var_u_est * diag(m)
 
-  g1 = (1 - gamma_est) * var_u_est
+  var_mixed = (1 - gamma_est) * var_u_est
 
-  temp1_g1 = cluster_means - gamma_est * cluster_means
-  temp2_g1 = solve(crossprod(X, crossprod(solve_V, X)))
-  g2 <- numeric(m)
+  temp1_var_mixed = cluster_means - gamma_est * cluster_means
+  temp2_var_mixed = solve(crossprod(X, crossprod(solve_V, X)))
+  af_var_mixed <- numeric(m)
 
   for (i in 1:m) {
-    g2[i] = t(temp1_g1[i,]) %*% temp2_g1 %*% (temp1_g1[i,])
+    af_var_mixed[i] = t(temp1_var_mixed[i,]) %*% temp2_var_mixed %*% (temp1_var_mixed[i,])
   }
 
 
@@ -452,10 +452,10 @@ compute_boot_params <- function(fit_boot_NERMS,
   output <- list(
     mu_hat_boot_mixed = mu_hat_boot_mixed,
     mu_hat_boot = mu_hat_boot,
-    g1_boot = g1_boot,
-    g2_boot = g2_boot,
-    g1 = g1,
-    g2 = g2
+    var_mixed_boot = var_mixed_boot,
+    af_var_mixed_boot = af_var_mixed_boot,
+    var_mixed = var_mixed,
+    af_var_mixed = af_var_mixed
   )
   return(output)
 

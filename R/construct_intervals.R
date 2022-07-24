@@ -19,7 +19,7 @@
 #' @return List with following parameters:
 #' \item{int_up}{Upper boundary of individual interval}
 #' \item{int_down}{Lower boundary of individual interval}
-#' \item{length_int}{Length of individual interval}
+#' \item{length_ind}{Length of individual interval}
 #' \item{int_sim_up}{Upper boundary of simultaneous interval}
 #' \item{int_sim_down}{Lower boundary of simultaneous interval}
 #' \item{length_sim}{Length of simulaneous interval}
@@ -108,7 +108,7 @@
 construct_intervals <- function(type_method = c("parametric",
                                                 "semiparametric",
                                                 "analytical"),
-                                type_var_estimator = c("g1", "mse_a",
+                                type_var_estimator = c("var_mixed", "mse_a",
                                                        "mse_b", "mse_3t",
                                                        "mse_spa", "mse_bc"),
                                 model_type = c("NERM"),
@@ -157,9 +157,10 @@ construct_intervals <- function(type_method = c("parametric",
 #' @importFrom stats qnorm quantile
 #'
 #' @return List with following parameters:
+#' \item{mu_hat}{Estimated mixed effects}
 #' \item{int_up}{Upper boundary of individual interval}
 #' \item{int_down}{Lower boundary of individual interval}
-#' \item{length_int}{Length of individual interval}
+#' \item{length_ind}{Length of individual interval}
 #' \item{int_sim_up}{Upper boundary of simultaneous interval}
 #' \item{int_sim_down}{Lower boundary of simultaneous interval}
 #' \item{length_sim}{Length of simulaneous interval}
@@ -232,7 +233,7 @@ construct_intLME.NERM <- function(model_obj,
                                   type_method = c("parametric",
                                                   "semiparametric",
                                                   "analytical"),
-                                  type_var_estimator = c("var", "mse_a",
+                                  type_var_estimator = c("var_mixed", "mse_a",
                                                          "mse_b", "mse_3t",
                                                          "mse_spa", "mse_bc"),
                                   formula_y,
@@ -253,23 +254,31 @@ construct_intLME.NERM <- function(model_obj,
 
   fitted_NERM <-
     fit_NERM(formula_y, data_sample, id_cluster, cluster_means)
+
   m = length(fitted_NERM$mu_hat)
   var_u_est  = fitted_NERM$var_u
   var_e_est  = fitted_NERM$var_e
+  mu_hat  = fitted_NERM$mu_hat
 
   if (type_method == "analytical") {
+
+    stopifnot("Only mse_a is supported for type_method = analytical" =
+                type_var_estimator == "mse_a")
+
+
     q_ind_alpha = qnorm(1 - alpha / 2)
     int_up <-
       fitted_NERM$mu_hat + sqrt(fitted_NERM$mse) *  q_ind_alpha
     int_down <-
       fitted_NERM$mu_hat - sqrt(fitted_NERM$mse) *  q_ind_alpha
+    length_ind <- int_up - int_down
 
     q_sim_alpha = qnorm(1 - alpha / (2 * m))
     int_sim_up <-
       fitted_NERM$mu_hat + sqrt(fitted_NERM$mse) *  q_sim_alpha
     int_sim_down <-
       fitted_NERM$mu_hat - sqrt(fitted_NERM$mse) *  q_sim_alpha
-
+    length_sim <- int_sim_up - int_sim_down
 
   } else {
     boot_samples <- bootstrap_NERM(
@@ -311,7 +320,7 @@ construct_intLME.NERM <- function(model_obj,
     for (i in 1:length(boot_samples$boot_NERMS)) {
       mu_matrix[i, ] <- unique(boot_samples$boot_NERMS[[i]]$mu)
       mu_hat_matrix[i, ] <- boot_samples$fit_boot_NERMS[[i]]$mu_hat
-      sd_mixed[i, ] <- sqrt(boot_samples$fit_boot_NERMS[[i]]$g1)
+      sd_mixed[i, ] <- sqrt(boot_samples$fit_boot_NERMS[[i]]$var_mixed)
     }
 
     # Bootstrap differences
@@ -327,7 +336,7 @@ construct_intLME.NERM <- function(model_obj,
     dif_t <- matrix(0, ncol = length(rmse_mixed), nrow = n_boot)
 
 
-    if (type_var_estimator == "g1") {
+    if (type_var_estimator == "var_mixed") {
       for (i in 1:n_boot) {
         dif_M[i, ] = abs(dif[i, ]) / sd_mixed[i, ]
         dif_t[i, ] = dif[i, ] / sd_mixed[i, ]
@@ -346,23 +355,23 @@ construct_intLME.NERM <- function(model_obj,
     q_ind_alpha = apply(dif_t, 2L, quantile, probs = c(alpha / 2, 1 - alpha / 2))
 
 
-    if (type_var_estimator == "g1") {
+    if (type_var_estimator == "var_mixed") {
       int_up <-
-        fitted_NERM$mu_hat + sqrt(fitted_NERM$g1) *  q_ind_alpha[2]
+        fitted_NERM$mu_hat + sqrt(fitted_NERM$var_mixed) *  q_ind_alpha[2]
       int_down <-
-        fitted_NERM$mu_hat + sqrt(fitted_NERM$g1) *  q_ind_alpha[1]
-      length_int <- int_up - int_down
+        fitted_NERM$mu_hat + sqrt(fitted_NERM$var_mixed) *  q_ind_alpha[1]
+      length_ind <- int_up - int_down
 
       int_sim_up <-
-        fitted_NERM$mu_hat + sqrt(fitted_NERM$g1) * q_sim_alpha
+        fitted_NERM$mu_hat + sqrt(fitted_NERM$var_mixed) * q_sim_alpha
       int_sim_down <-
-        fitted_NERM$mu_hat - sqrt(fitted_NERM$g1) * q_sim_alpha
+        fitted_NERM$mu_hat - sqrt(fitted_NERM$var_mixed) * q_sim_alpha
       length_sim <- int_sim_up - int_sim_down
 
     } else {
       int_up <- fitted_NERM$mu_hat + rmse_mixed *  q_ind_alpha[2]
       int_down <- fitted_NERM$mu_hat + rmse_mixed *  q_ind_alpha[1]
-      length_int <- int_up - int_down
+      length_ind <- int_up - int_down
 
       int_sim_up <- fitted_NERM$mu_hat + rmse_mixed * q_sim_alpha
       int_sim_down <- fitted_NERM$mu_hat - rmse_mixed * q_sim_alpha
@@ -373,9 +382,10 @@ construct_intLME.NERM <- function(model_obj,
 
   output <-
     list(
+      mu_hat = mu_hat,
       int_up = int_up,
       int_down = int_down,
-      length_int = length_int,
+      length_ind = length_ind,
       int_sim_up = int_sim_up,
       int_sim_down = int_sim_down,
       length_sim = length_sim
