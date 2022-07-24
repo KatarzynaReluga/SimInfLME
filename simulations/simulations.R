@@ -21,7 +21,9 @@ cluster_means <- as.matrix(aggregate(X,
 #Formula to construct intervals
 formula_y <-  y ~ -1 + X0 + X1 + (1| id_cluster)
 
-# Normally distributed errors and random effects
+##################################################
+# Normally distributed errors and random effects #
+##################################################
 
 data_samples <- generate_NERM(generate_u = list(type = "normal",
                                                scaling_factor = scaling_factor_u),
@@ -34,7 +36,7 @@ data_samples <- generate_NERM(generate_u = list(type = "normal",
                               no_sim = no_sim,
                               cluster_means = cluster_means)
 
-# Analytical intervals
+# Analytical intervals -------------------------------------
 
 analytical_interval <- function(data_sample) {
 
@@ -50,7 +52,8 @@ analytical_interval <- function(data_sample) {
 
 analytical_intervals <- lapply(data_samples, analytical_interval)
 
-# Add true mixed parameter
+
+# Add true mixed parameter -----------------------------------
 
 for (i in 1:length(analytical_intervals)) {
   analytical_intervals[[i]]$mu <- unique(data_samples[[i]]$mu)
