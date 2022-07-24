@@ -326,14 +326,8 @@ construct_intLME.NERM <- function(model_obj,
     # Bootstrap differences
     dif <- mu_hat_matrix - mu_matrix
 
-    rmse_mixed <- boot_MSE(type_var_estimator,
-                           boot_samples,
-                           cluster_means,
-                           var_u_est,
-                           var_e_est)$rmse_mixed
-
-    dif_M <- matrix(0, ncol = length(rmse_mixed), nrow = n_boot)
-    dif_t <- matrix(0, ncol = length(rmse_mixed), nrow = n_boot)
+    dif_M <- matrix(0, ncol = length(dif), nrow = n_boot)
+    dif_t <- matrix(0, ncol = length(dif), nrow = n_boot)
 
 
     if (type_var_estimator == "var_mixed") {
@@ -342,6 +336,13 @@ construct_intLME.NERM <- function(model_obj,
         dif_t[i, ] = dif[i, ] / sd_mixed[i, ]
       }
     } else {
+
+      rmse_mixed <- boot_MSE(type_var_estimator,
+                             boot_samples,
+                             cluster_means,
+                             var_u_est,
+                             var_e_est)$rmse_mixed
+
       for (i in 1:m) {
         dif_M[, i] = abs(dif[, i]) / rmse_mixed[i]
         dif_t[, i] = dif[, i] / rmse_mixed[i]

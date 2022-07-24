@@ -49,12 +49,12 @@ compute_coverage_length <- function(intervals) {
   average_length_sim = mean(colMeans(int_sim_matrix))
   var_length_sim = mean(apply(int_sim_matrix, 2, var))
 
-  output <- list(cov_ind = coverage_summary[1],
-                 average_length_ind,
-                 var_length_ind,
-                 cov_sim = coverage_summary[2],
-                 average_length_sim,
-                 var_length_sim)
+  output <- list(cov_ind = unname(coverage_summary[1]),
+                 average_length_ind = average_length_ind,
+                 var_length_ind = var_length_ind,
+                 cov_sim = unname(coverage_summary[2]),
+                 average_length_sim = average_length_sim,
+                 var_length_sim = var_length_sim)
   output
 
 }

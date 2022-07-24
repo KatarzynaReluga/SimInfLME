@@ -36,7 +36,7 @@ data_samples <- generate_NERM(generate_u = list(type = "normal",
                               no_sim = no_sim,
                               cluster_means = cluster_means)
 
-# Analytical intervals -------------------------------------
+# Analytical intervals -----------------------------------------
 
 analytical_interval <- function(data_sample) {
 
@@ -53,11 +53,66 @@ analytical_interval <- function(data_sample) {
 analytical_intervals <- lapply(data_samples, analytical_interval)
 
 
-# Add true mixed parameter -----------------------------------
+# Add true mixed parameter to the list with intervals -----------------
 
 for (i in 1:length(analytical_intervals)) {
   analytical_intervals[[i]]$mu <- unique(data_samples[[i]]$mu)
 }
+
+# Compute coverage and lengths ----------------------------------------
+
+coverage_length <- compute_coverage_length(analytical_intervals)
+
+
+# Parametric bootstrap intervals -----------------------------------------
+
+param_boot_interval <- function(data_sample) {
+
+  interval <- construct_intervals(type_method = "parametric",
+                                  type_var_estimator = "var_mixed",
+                                  model_type = c("NERM"),
+                                  formula_y,
+                                  data_sample = data_sample,
+                                  cluster_means = cluster_means, id_cluster,
+                                  alpha = 0.05, n_boot = 100,
+                                  boot_seed = 1)
+  interval
+}
+
+param_boot_intervals <- lapply(data_samples, param_boot_interval)
+
+
+# Add true mixed parameter to the list with intervals -----------------
+
+for (i in 1:length(analytical_intervals)) {
+  analytical_intervals[[i]]$mu <- unique(data_samples[[i]]$mu)
+}
+
+# Compute coverage and lengths ----------------------------------------
+
+coverage_length <- compute_coverage_length(analytical_intervals)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

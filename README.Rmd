@@ -6,7 +6,6 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  #fig.path = "man/figures/README-",
   out.width = "100%"
 )
 ```
@@ -17,19 +16,19 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-Package **SimInfLME** implements ...
+Package **SimInfLME** implements methods to construct individual and simultaneous confidence intervals for mixed effect using parametric and semiparametric bootstrap. 
 
 ## Installation
 
-You can install the most recent version of **SimInfLME** from [GitHub](https://github.com/)  
+You can install the most recent version of **SimInfLME** from [GitHub](https://github.com/) with: 
 
 ```{r, eval = FALSE}
-# install.packages("devtools")
-# install.packages("remotes")
 
-#devtools::install_github("KatarzynaReluga/postcAIC")
+remotes::install_github("KatarzynaReluga/SimInfLME")
 
 
 ```
 
+## Example 
 
+This is a basic example which shows you how to construct individual and simultaneous confidence intervals for mixed parameters under nested-error regression model (NERM) using simple semiparametric bootstrap.
