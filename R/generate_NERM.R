@@ -111,6 +111,13 @@ generate_NERM <- function(generate_u = list(type = "chisquared",
     return(data_sample)
   }
 
+#   sim_seed <- list()
+#   for (j in 1:no_sim) {
+#      sim_seed[[j]] <- start_seed * j
+#      samples <- lapply(sim_seed, generate_sample_wrapper, return_u)
+#   }
+
+
   if (no_sim == 1) {
     samples <- lapply(start_seed, generate_sample_wrapper, return_u)
     samples <- data.frame(samples)
@@ -122,4 +129,6 @@ generate_NERM <- function(generate_u = list(type = "chisquared",
     samples <- lapply(sim_seed, generate_sample_wrapper, return_u)
 
   }
+  return(samples)
+
 }

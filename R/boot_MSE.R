@@ -50,7 +50,6 @@
 #'                              cluster_means = cluster_means)
 #'
 #'
-#'
 #' fitted_NERM <- fit_NERM(formula_y, data_sample,
 #'                         id_cluster, cluster_means)
 #'

@@ -48,19 +48,20 @@
 #'                              start_seed = 1,
 #'                              no_sim = 1)
 #'
+#' # data_sample = data.frame(data_sample)
 #'
 #' fitted_NERM <- fit_NERM(formula_y, data_sample,
 #'                         id_cluster, cluster_means)
 #'
 #'
-#' generate_NERM_sp <- function(empirical_u = fitted_NERM$u_hat,
-#'                              var_u_est = fitted_NERM$var_u,
-#'                              empirical_e = fitted_NERM$e_hat,
-#'                              var_e_est = fitted_NERM$var_e,
-#'                              beta = fitted_NERM$beta_hat, X = X,
-#'                              cluster_means,
-#'                              id_cluster = id_cluster,
-#'                              start_seed = 1, no_sim = 10)
+#' generate_samples <- generate_NERM_sp(empirical_u = fitted_NERM$u_hat,
+#'                                      var_u_est = fitted_NERM$var_u,
+#'                                      empirical_e = fitted_NERM$e_hat,
+#'                                      var_e_est = fitted_NERM$var_e,
+#'                                      beta = fitted_NERM$beta_hat, X = X,
+#'                                      cluster_means,
+#'                                      id_cluster = id_cluster,
+#'                                      start_seed = 1, no_sim = 10)
 #'
 #'
 
@@ -104,14 +105,15 @@ generate_NERM_sp <- function(empirical_u,
   }
 
   if (no_sim == 1) {
-    samples <- lapply(start_seed, generate_sample_wrapper)
+    samples <- lapply(start_seed, generate_sample_wrapper, return_u)
     samples <- data.frame(samples)
   } else {
     sim_seed <- list()
     for (j in 1:no_sim)
       sim_seed[[j]] <- start_seed * j
 
-    samples <- lapply(sim_seed, generate_sample_wrapper)
+    samples <- lapply(sim_seed, generate_sample_wrapper, return_u)
 
   }
+  return(samples)
 }

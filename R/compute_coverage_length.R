@@ -6,7 +6,6 @@
 #'
 #' @param intervals List of individual and simultaneous intervals from simulations
 #'
-#' @importFrom data.table rbindlist
 #' @importFrom stats var
 #'
 #' @return List with following parameters:
@@ -20,17 +19,12 @@
 #'
 #' @export
 #'
-#'
-#'
 
 
 compute_coverage_length <- function(intervals) {
 
 
   coverage_list <- lapply(intervals, empirical_coverage)
-  coverage_matrix <- data.frame(rbindlist(coverage_list))
-
-  coverage_summary <- colMeans(coverage_matrix)
 
   int_ind_matrix <- matrix(0, nrow = length(intervals),
                            ncol = length(intervals[[1]]$mu))
@@ -38,21 +32,30 @@ compute_coverage_length <- function(intervals) {
   int_sim_matrix <- matrix(0, nrow = length(intervals),
                            ncol = length(intervals[[1]]$mu))
 
+  tests_ind <- matrix(0, nrow = length(intervals),
+                    ncol = length(intervals[[1]]$mu))
+
+  tests_sim <- numeric(length(intervals))
+
   for (i in 1:length(intervals)) {
     int_ind_matrix[i, ] <- intervals[[i]]$length_ind
     int_sim_matrix[i, ] <- intervals[[i]]$length_sim
+    tests_ind[i, ] <- coverage_list[[i]]$test_ind
+    tests_sim[i] <- coverage_list[[i]]$test_sim
   }
 
+  cov_ind <- mean(colMeans(tests_ind))
   average_length_ind = mean(colMeans(int_ind_matrix))
   var_length_ind = mean(apply(int_ind_matrix, 2, var))
 
-  average_length_sim = mean(colMeans(int_sim_matrix))
+  cov_sim <- mean(tests_sim)
+  average_length_sim = mean(int_sim_matrix)
   var_length_sim = mean(apply(int_sim_matrix, 2, var))
 
-  output <- list(cov_ind = unname(coverage_summary[1]),
+  output <- list(cov_ind = cov_ind,
                  average_length_ind = average_length_ind,
                  var_length_ind = var_length_ind,
-                 cov_sim = unname(coverage_summary[2]),
+                 cov_sim = cov_sim,
                  average_length_sim = average_length_sim,
                  var_length_sim = var_length_sim)
   output
@@ -74,7 +77,7 @@ compute_coverage_length <- function(intervals) {
 #'
 
 
-
+# call it test
 empirical_coverage <- function(intervals_one_sample) {
 
   mu = intervals_one_sample$mu
@@ -84,7 +87,7 @@ empirical_coverage <- function(intervals_one_sample) {
   int_sim_down = intervals_one_sample$int_sim_down
   int_sim_up = intervals_one_sample$int_sim_up
 
-  test_ind <- mean((int_down <= mu) & (mu <= int_up))
+  test_ind <- (int_down <= mu) & (mu <= int_up)
   test_sim = sum(((int_sim_down <= mu) & (mu <= int_sim_up))) == length(mu)
 
   output <- list(test_ind = test_ind,

@@ -82,6 +82,7 @@ data_sample <- generate_NERM(generate_u = list(type = "chisquared",
                              start_seed = 1,
                              no_sim = 1)
 
+# data_sample = data.frame(data_sample)
 
 fitted_NERM <- fit_NERM(formula_y, data_sample,
                         id_cluster, cluster_means)

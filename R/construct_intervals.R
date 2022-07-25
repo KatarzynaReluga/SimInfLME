@@ -63,26 +63,6 @@
 #'                              no_sim = 1,
 #'                              cluster_means = cluster_means)
 #'
-#' intervals_3t <- construct_intervals(type_method = c("parametric"),
-#'                                     type_var_estimator = c("mse_3t"),
-#'                                     model_type = c("NERM"),
-#'                                     formula_y, data_sample,
-#'                                     cluster_means = cluster_means,
-#'                                     id_cluster = id_cluster,
-#'                                     alpha = 0.05,
-#'                                     n_boot = 100,
-#'                                     boot_seed = 1)
-#'
-#'
-#' intervals_bc <- construct_intervals(type_method = c("parametric"),
-#'                                     type_var_estimator = c("mse_bc"),
-#'                                     model_type = c("NERM"),
-#'                                     formula_y, data_sample,
-#'                                     cluster_means = cluster_means,
-#'                                     id_cluster = id_cluster,
-#'                                     alpha = 0.05,
-#'                                     n_boot = 100,
-#'                                     boot_seed = 1)
 #'
 #' intervals_b <- construct_intervals(type_method = c("parametric"),
 #'                                    type_var_estimator = c("mse_b"),
@@ -94,15 +74,6 @@
 #'                                    n_boot = 100,
 #'                                    boot_seed = 1)
 #'
-#' intervals_spa <- construct_intervals(type_method = c("parametric"),
-#'                                      type_var_estimator = c("mse_spa"),
-#'                                      model_type = c("NERM"),
-#'                                      formula_y, data_sample,
-#'                                      cluster_means = cluster_means,
-#'                                      id_cluster = id_cluster,
-#'                                      alpha = 0.05,
-#'                                      n_boot = 100,
-#'                                      boot_seed = 1)
 #'
 
 construct_intervals <- function(type_method = c("parametric",
@@ -120,6 +91,8 @@ construct_intervals <- function(type_method = c("parametric",
                                 n_boot = 1000,
                                 boot_seed = 1,
                                 ...) {
+
+
   # Define the type of model
   model_type <- match.arg(model_type)
   class(model_type) <- model_type
@@ -136,9 +109,9 @@ construct_intervals <- function(type_method = c("parametric",
     data_sample,
     cluster_means = cluster_means,
     id_cluster = id_cluster,
-    alpha = 0.05,
-    n_boot = 100,
-    boot_seed = 1
+    alpha = alpha,
+    n_boot = n_boot,
+    boot_seed = boot_seed
   )
 
   return(intervals)
@@ -205,7 +178,7 @@ construct_intervals <- function(type_method = c("parametric",
 #' # For now, only NERM is supported, but other model choices can be easily programmed
 #' class(model_obj) <- model_obj
 #'
-#' construct_LMEintervals <- construct_intLME(model_obj,
+#' construct_LMEintervals_pb <- construct_intLME(model_obj,
 #'                                            type_method = c("parametric"),
 #'                                            type_var_estimator = c("mse_bc"),
 #'                                            formula_y, data_sample,
@@ -213,6 +186,13 @@ construct_intervals <- function(type_method = c("parametric",
 #'                                            alpha = 0.05, n_boot = 100,
 #'                                            boot_seed = 1)
 #'
+#' construct_LMEintervals_spb <- construct_intLME(model_obj,
+#'                                            type_method = c("semiparametric"),
+#'                                            type_var_estimator = c("mse_bc"),
+#'                                            formula_y, data_sample,
+#'                                            cluster_means = cluster_means, id_cluster,
+#'                                            alpha = 0.05, n_boot = 100,
+#'                                            boot_seed = 1)
 #'
 
 
@@ -259,6 +239,9 @@ construct_intLME.NERM <- function(model_obj,
   var_u_est  = fitted_NERM$var_u
   var_e_est  = fitted_NERM$var_e
   mu_hat  = fitted_NERM$mu_hat
+  var_mixed = fitted_NERM$var_mixed
+  empirical_u = fitted_NERM$u_hat
+  empirical_e = fitted_NERM$e_hat
 
   if (type_method == "analytical") {
 
@@ -286,6 +269,8 @@ construct_intLME.NERM <- function(model_obj,
       var_u_est = var_u_est,
       var_e_est = var_e_est,
       beta_est = fitted_NERM$beta_hat,
+      empirical_u = empirical_u,
+      empirical_e = empirical_e,
       boot_seed = boot_seed,
       n_boot = n_boot,
       formula_y = formula_y,
@@ -296,26 +281,11 @@ construct_intLME.NERM <- function(model_obj,
     )
 
     # Retrieve mu_boot and mu_hat_boot
-    mu_matrix <-
-      matrix(
-        0,
-        ncol = length(boot_samples$fit_boot_NERMS[[1]]$mu_hat),
-        nrow = length(boot_samples$fit_boot_NERMS)
-      )
+    mu_matrix = matrix(0, ncol = m, nrow = n_boot)
 
-    mu_hat_matrix <-
-      matrix(
-        0,
-        ncol = length(boot_samples$fit_boot_NERMS[[1]]$mu_hat),
-        nrow = length(boot_samples$fit_boot_NERMS)
-      )
+    mu_hat_matrix = matrix(0, ncol = m, nrow = n_boot)
 
-    sd_mixed <-
-      matrix(
-        0,
-        ncol = length(boot_samples$fit_boot_NERMS[[1]]$mu_hat),
-        nrow = length(boot_samples$fit_boot_NERMS)
-      )
+    sd_mixed = matrix(0, ncol = m, nrow = n_boot)
 
     for (i in 1:length(boot_samples$boot_NERMS)) {
       mu_matrix[i, ] <- unique(boot_samples$boot_NERMS[[i]]$mu)
@@ -326,56 +296,57 @@ construct_intLME.NERM <- function(model_obj,
     # Bootstrap differences
     dif <- mu_hat_matrix - mu_matrix
 
-    dif_M <- matrix(0, ncol = length(dif), nrow = n_boot)
-    dif_t <- matrix(0, ncol = length(dif), nrow = n_boot)
+    dif_stand <- matrix(0, ncol = m, nrow = n_boot)
+
 
 
     if (type_var_estimator == "var_mixed") {
       for (i in 1:n_boot) {
-        dif_M[i, ] = abs(dif[i, ]) / sd_mixed[i, ]
-        dif_t[i, ] = dif[i, ] / sd_mixed[i, ]
+        dif_stand[i, ] = dif[i, ] / sd_mixed[i, ]
       }
     } else {
 
-      rmse_mixed <- boot_MSE(type_var_estimator,
-                             boot_samples,
-                             cluster_means,
-                             var_u_est,
-                             var_e_est)$rmse_mixed
+      if  (type_var_estimator == "mse_a") {
+
+        rmse_mixed <- sqrt(fitted_NERM$mse)
+
+      } else {
+        rmse_mixed <- boot_MSE(type_var_estimator,
+                               boot_samples,
+                               cluster_means,
+                               var_u_est,
+                               var_e_est)$rmse_mixed
+      }
+
 
       for (i in 1:m) {
-        dif_M[, i] = abs(dif[, i]) / rmse_mixed[i]
-        dif_t[, i] = dif[, i] / rmse_mixed[i]
+        dif_stand[, i] = dif[, i] / rmse_mixed[i]
       }
 
     }
 
-    q_sim_alpha = quantile(apply(dif_M, 1L, max) ,
+    q_sim_alpha = quantile(apply(abs(dif_stand), 1L, max) ,
                            prob = 1 - alpha,
                            type = 8)
-    q_ind_alpha = apply(dif_t, 2L, quantile, probs = c(alpha / 2, 1 - alpha / 2))
+    q_ind_alpha = apply(dif_stand, 2L, quantile, probs = c(alpha / 2, 1 - alpha / 2))
 
 
     if (type_var_estimator == "var_mixed") {
-      int_up <-
-        fitted_NERM$mu_hat + sqrt(fitted_NERM$var_mixed) *  q_ind_alpha[2]
-      int_down <-
-        fitted_NERM$mu_hat + sqrt(fitted_NERM$var_mixed) *  q_ind_alpha[1]
+      int_up <- mu_hat + sqrt(var_mixed) *  q_ind_alpha[2, ]
+      int_down <- mu_hat + sqrt(var_mixed) *  q_ind_alpha[1, ]
       length_ind <- int_up - int_down
 
-      int_sim_up <-
-        fitted_NERM$mu_hat + sqrt(fitted_NERM$var_mixed) * q_sim_alpha
-      int_sim_down <-
-        fitted_NERM$mu_hat - sqrt(fitted_NERM$var_mixed) * q_sim_alpha
+      int_sim_up <- mu_hat + sqrt(var_mixed) * q_sim_alpha
+      int_sim_down <- mu_hat - sqrt(var_mixed) * q_sim_alpha
       length_sim <- int_sim_up - int_sim_down
 
     } else {
-      int_up <- fitted_NERM$mu_hat + rmse_mixed *  q_ind_alpha[2]
-      int_down <- fitted_NERM$mu_hat + rmse_mixed *  q_ind_alpha[1]
+      int_up <- mu_hat + rmse_mixed *  q_ind_alpha[2, ]
+      int_down <- mu_hat + rmse_mixed *  q_ind_alpha[1, ]
       length_ind <- int_up - int_down
 
-      int_sim_up <- fitted_NERM$mu_hat + rmse_mixed * q_sim_alpha
-      int_sim_down <- fitted_NERM$mu_hat - rmse_mixed * q_sim_alpha
+      int_sim_up <- mu_hat + rmse_mixed * q_sim_alpha
+      int_sim_down <- mu_hat - rmse_mixed * q_sim_alpha
       length_sim <- int_sim_up - int_sim_down
     }
 
@@ -384,12 +355,17 @@ construct_intLME.NERM <- function(model_obj,
   output <-
     list(
       mu_hat = mu_hat,
+
+
       int_up = int_up,
       int_down = int_down,
       length_ind = length_ind,
+      q_ind_alpha = q_ind_alpha,
+
       int_sim_up = int_sim_up,
       int_sim_down = int_sim_down,
-      length_sim = length_sim
+      length_sim = length_sim,
+      q_sim_alpha = q_sim_alpha
     )
   return(output)
 
