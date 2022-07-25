@@ -6,8 +6,9 @@
 
 ## Overview
 
-Package **SimInfLME** implements individual and simultaneous bootstrap
-confidence intervals for mixed effect.
+Package **SimInfLME** implements methods to construct individual and
+simultaneous confidence intervals for mixed effect using parametric and
+semiparametric bootstrap.
 
 ## Installation
 
