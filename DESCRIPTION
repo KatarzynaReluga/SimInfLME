@@ -5,7 +5,7 @@ Authors@R:
     person(given = "Katarzyna",
            family = "Reluga",
            role = c("aut", "cre"),
-           email = "katarzyna.reluga@utoronto.ca",
+           email = "katarzyna.reluga@berkeley.edu",
            comment = c(ORCID = "0000-0001-9651-5030"))
 Description: Package SimInfLME implements methods to construct individual and simultaneous confidence intervals for linear mixed effects.
 License: GPL (>= 3)
