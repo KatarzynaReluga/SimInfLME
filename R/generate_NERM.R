@@ -21,7 +21,7 @@
 #' @param X Matrix with covariates
 #' @param id_cluster Vector with cluster labels
 #' @param no_sim Number of samples
-#' @param start_seed Starting seed
+#' @param start_seed Seed to reproduce simulations
 #' @param cluster_means Cluster-level covariates for fixed parameters
 #' @param return_u Return random effects? Default: return_u = FALSE
 #'
@@ -32,6 +32,7 @@
 #'
 #' @examples
 #'
+#' # Basic setup -------------------------------------------------------------------
 #' set.seed(11992)
 #' m = 25
 #' n_j = 5
@@ -47,6 +48,7 @@
 #' list(id_cluster),
 #' FUN = mean)[, -1])
 #'
+#' # Generate NERM sample ---------------------------------------------------------
 #' generate_samples <- generate_NERM(generate_u = list(type = "chisquared",
 #'                                                     scaling_factor = 1,
 #'                                                     dg = 6),
@@ -111,11 +113,6 @@ generate_NERM <- function(generate_u = list(type = "chisquared",
     return(data_sample)
   }
 
-#   sim_seed <- list()
-#   for (j in 1:no_sim) {
-#      sim_seed[[j]] <- start_seed * j
-#      samples <- lapply(sim_seed, generate_sample_wrapper, return_u)
-#   }
 
 
   if (no_sim == 1) {

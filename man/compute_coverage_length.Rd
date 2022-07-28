@@ -11,12 +11,12 @@ compute_coverage_length(intervals)
 }
 \value{
 List with following parameters:
-\item{cov_ind}{Empircial coverage of individual intervals}
+\item{cov_ind}{Empirical coverage of individual intervals}
 \item{average_length_ind}{Average length of individual intervals}
-\item{var_length_ind}{Variance of length of individual intervals}
-\item{cov_sim}{Empircial coverage of simultaneous intervals}
+\item{var_length_ind}{Variance of lengths of individual intervals}
+\item{cov_sim}{Empirical coverage of simultaneous intervals}
 \item{average_length_sim}{Average length of simultaneous intervals}
-\item{var_length_sim}{Variance of length of simultaneous intervals}
+\item{var_length_sim}{Variance of lengths of simultaneous intervals}
 }
 \description{
 Function to calculate the empirical coverage, the average length and the variance

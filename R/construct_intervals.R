@@ -31,6 +31,7 @@
 #'
 #' @examples
 #'
+#' # Basic setup -------------------------------------------------------------------
 #' set.seed(11992)
 #' m = 25
 #' n_j = 5
@@ -47,9 +48,10 @@
 #' list(id_cluster),
 #' FUN = mean)[, -1])
 #'
-#' #Formula to construct intervals
+#' # Formula to fit NERM -----------------------------------------------------------
 #' formula_y <-  y ~ -1 + X0 + X1 + (1| id_cluster)
 #'
+#' # Generate a sample from NERM ---------------------------------------------------
 #' data_sample <- generate_NERM(generate_u = list(type = "chisquared",
 #'                                                scaling_factor = 1,
 #'                                                dg = 6),
@@ -63,7 +65,7 @@
 #'                              no_sim = 1,
 #'                              cluster_means = cluster_means)
 #'
-#'
+#' # Construct intervals -----------------------------------------------------------
 #' intervals_b <- construct_intervals(type_method = c("parametric"),
 #'                                    type_var_estimator = c("mse_b"),
 #'                                    model_type = c("NERM"),

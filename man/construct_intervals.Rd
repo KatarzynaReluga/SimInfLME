@@ -58,6 +58,7 @@ but the function can be easily extended to other model types
 }
 \examples{
 
+# Basic setup -------------------------------------------------------------------
 set.seed(11992)
 m = 25
 n_j = 5
@@ -74,9 +75,10 @@ cluster_means <- as.matrix(aggregate(X,
 list(id_cluster),
 FUN = mean)[, -1])
 
-#Formula to construct intervals
+# Formula to fit NERM -----------------------------------------------------------
 formula_y <-  y ~ -1 + X0 + X1 + (1| id_cluster)
 
+# Generate a sample from NERM ---------------------------------------------------
 data_sample <- generate_NERM(generate_u = list(type = "chisquared",
                                                scaling_factor = 1,
                                                dg = 6),
@@ -90,27 +92,7 @@ data_sample <- generate_NERM(generate_u = list(type = "chisquared",
                              no_sim = 1,
                              cluster_means = cluster_means)
 
-intervals_3t <- construct_intervals(type_method = c("parametric"),
-                                    type_var_estimator = c("mse_3t"),
-                                    model_type = c("NERM"),
-                                    formula_y, data_sample,
-                                    cluster_means = cluster_means,
-                                    id_cluster = id_cluster,
-                                    alpha = 0.05,
-                                    n_boot = 100,
-                                    boot_seed = 1)
-
-
-intervals_bc <- construct_intervals(type_method = c("parametric"),
-                                    type_var_estimator = c("mse_bc"),
-                                    model_type = c("NERM"),
-                                    formula_y, data_sample,
-                                    cluster_means = cluster_means,
-                                    id_cluster = id_cluster,
-                                    alpha = 0.05,
-                                    n_boot = 100,
-                                    boot_seed = 1)
-
+# Construct intervals -----------------------------------------------------------
 intervals_b <- construct_intervals(type_method = c("parametric"),
                                    type_var_estimator = c("mse_b"),
                                    model_type = c("NERM"),
@@ -121,14 +103,5 @@ intervals_b <- construct_intervals(type_method = c("parametric"),
                                    n_boot = 100,
                                    boot_seed = 1)
 
-intervals_spa <- construct_intervals(type_method = c("parametric"),
-                                     type_var_estimator = c("mse_spa"),
-                                     model_type = c("NERM"),
-                                     formula_y, data_sample,
-                                     cluster_means = cluster_means,
-                                     id_cluster = id_cluster,
-                                     alpha = 0.05,
-                                     n_boot = 100,
-                                     boot_seed = 1)
 
 }

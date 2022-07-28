@@ -9,12 +9,12 @@
 #' @importFrom stats var
 #'
 #' @return List with following parameters:
-#' \item{cov_ind}{Empircial coverage of individual intervals}
+#' \item{cov_ind}{Empirical coverage of individual intervals}
 #' \item{average_length_ind}{Average length of individual intervals}
-#' \item{var_length_ind}{Variance of length of individual intervals}
-#' \item{cov_sim}{Empircial coverage of simultaneous intervals}
+#' \item{var_length_ind}{Variance of lengths of individual intervals}
+#' \item{cov_sim}{Empirical coverage of simultaneous intervals}
 #' \item{average_length_sim}{Average length of simultaneous intervals}
-#' \item{var_length_sim}{Variance of length of simultaneous intervals}
+#' \item{var_length_sim}{Variance of lengths of simultaneous intervals}
 #'
 #'
 #' @export
@@ -68,7 +68,7 @@ compute_coverage_length <- function(intervals) {
 #' over simulation runs
 #'
 #' @param intervals_one_sample List of individual and simultaneous intervals from
-#' one simulation simulations
+#' one simulation simulation
 #'
 #' @return List with following parameters:
 #' \item{test_ind}{Empircial coverage of individual intervals}
@@ -77,7 +77,6 @@ compute_coverage_length <- function(intervals) {
 #'
 
 
-# call it test
 empirical_coverage <- function(intervals_one_sample) {
 
   mu = intervals_one_sample$mu
@@ -87,7 +86,7 @@ empirical_coverage <- function(intervals_one_sample) {
   int_sim_down = intervals_one_sample$int_sim_down
   int_sim_up = intervals_one_sample$int_sim_up
 
-  test_ind <- (int_down <= mu) & (mu <= int_up)
+  test_ind = (int_down <= mu) & (mu <= int_up)
   test_sim = sum(((int_sim_down <= mu) & (mu <= int_sim_up))) == length(mu)
 
   output <- list(test_ind = test_ind,

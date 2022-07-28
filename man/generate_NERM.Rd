@@ -41,7 +41,7 @@ generate_NERM(
 
 \item{id_cluster}{Vector with cluster labels}
 
-\item{start_seed}{Starting seed}
+\item{start_seed}{Seed to reproduce simulations}
 
 \item{no_sim}{Number of samples}
 
@@ -56,6 +56,7 @@ in a parametric way
 }
 \examples{
 
+# Basic setup -------------------------------------------------------------------
 set.seed(11992)
 m = 25
 n_j = 5
@@ -71,6 +72,7 @@ cluster_means <- as.matrix(aggregate(X,
 list(id_cluster),
 FUN = mean)[, -1])
 
+# Generate NERM sample ---------------------------------------------------------
 generate_samples <- generate_NERM(generate_u = list(type = "chisquared",
                                                     scaling_factor = 1,
                                                     dg = 6),

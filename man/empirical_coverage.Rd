@@ -8,7 +8,7 @@ empirical_coverage(intervals_one_sample)
 }
 \arguments{
 \item{intervals_one_sample}{List of individual and simultaneous intervals from
-one simulation simulations}
+one simulation simulation}
 }
 \value{
 List with following parameters:

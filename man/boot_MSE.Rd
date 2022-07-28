@@ -53,6 +53,8 @@ bootstrap MSE estimate
 
 \examples{
 
+# Basic setup -------------------------------------------------------------------
+
 set.seed(11992)
 m = 25
 n_j = 5
@@ -69,8 +71,10 @@ cluster_means <- as.matrix(aggregate(X,
 list(id_cluster),
 FUN = mean)[, -1])
 
-#Formula to construct intervals
+# Formula to construct intervals -----------------------------------------------
 formula_y <-  y ~ -1 + X0 + X1 + (1| id_cluster)
+
+# Generate sample and fit NERM -------------------------------------------------
 
 data_sample <- generate_NERM(generate_u = list(type = "chisquared",
                                                scaling_factor = 1,
@@ -89,10 +93,11 @@ data_sample <- generate_NERM(generate_u = list(type = "chisquared",
 fitted_NERM <- fit_NERM(formula_y, data_sample,
                         id_cluster, cluster_means)
 
+# Parametric bootstap for NERM ---------------------------------------------------
 type_method = c("parametric")
 class(type_method) <- type_method
 
-# Bootstrap MSE
+# Bootstrap MSE ------------------------------------------------------------------
 
 boot_samples <- bootstrap_NERM(type_method,
                                var_u_est = fitted_NERM$var_u,
@@ -111,7 +116,7 @@ class(type_var_estimator) <- "mse_b"
 boot_mixed <- boot_MSE(type_var_estimator, boot_samples,
                        cluster_means, var_u_est, var_e_est)
 
-# Bias-corrected bootstrap MSE
+# Bias-corrected bootstrap MSE ----------------------------------------------------
 
 boot_samples <- bootstrap_NERM(type_method,
                                var_u_est = fitted_NERM$var_u,

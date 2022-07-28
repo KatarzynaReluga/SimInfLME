@@ -35,7 +35,7 @@ generate_NERM_sp(
 
 \item{id_cluster}{Vector with cluster labels}
 
-\item{start_seed}{Starting seed}
+\item{start_seed}{Seed to reproduce simulations}
 
 \item{no_sim}{Number of samples}
 
@@ -50,6 +50,7 @@ in a semiparametric way
 }
 \examples{
 
+# Basic setup -------------------------------------------------------------------
 set.seed(11992)
 m = 25
 n_j = 5
@@ -66,9 +67,10 @@ cluster_means <- as.matrix(aggregate(X,
 list(id_cluster),
 FUN = mean)[, -1])
 
-#Formula to construct intervals
+# Formula to construct intervals -----------------------------------------------
 formula_y <-  y ~ 1 + X1 + (1| id_cluster)
 
+# Generate NERM sample in a parametric way-------------------------------------
 data_sample <- generate_NERM(generate_u = list(type = "chisquared",
                                                scaling_factor = 1,
                                                dg = 6),
@@ -82,20 +84,19 @@ data_sample <- generate_NERM(generate_u = list(type = "chisquared",
                              start_seed = 1,
                              no_sim = 1)
 
-# data_sample = data.frame(data_sample)
-
+# Fit NERM ---------------------------------------------------------------------
 fitted_NERM <- fit_NERM(formula_y, data_sample,
                         id_cluster, cluster_means)
 
-
-generate_NERM_sp <- function(empirical_u = fitted_NERM$u_hat,
-                             var_u_est = fitted_NERM$var_u,
-                             empirical_e = fitted_NERM$e_hat,
-                             var_e_est = fitted_NERM$var_e,
-                             beta = fitted_NERM$beta_hat, X = X,
-                             cluster_means,
-                             id_cluster = id_cluster,
-                             start_seed = 1, no_sim = 10)
+# Generate NERM sample in a semiparametric way ---------------------------------
+generate_samples <- generate_NERM_sp(empirical_u = fitted_NERM$u_hat,
+                                     var_u_est = fitted_NERM$var_u,
+                                     empirical_e = fitted_NERM$e_hat,
+                                     var_e_est = fitted_NERM$var_e,
+                                     beta = fitted_NERM$beta_hat, X = X,
+                                     cluster_means,
+                                     id_cluster = id_cluster,
+                                     start_seed = 1, no_sim = 10)
 
 
 }

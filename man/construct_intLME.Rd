@@ -101,7 +101,7 @@ model_obj = c("NERM")
 # For now, only NERM is supported, but other model choices can be easily programmed
 class(model_obj) <- model_obj
 
-construct_LMEintervals <- construct_intLME(model_obj,
+construct_LMEintervals_pb <- construct_intLME(model_obj,
                                            type_method = c("parametric"),
                                            type_var_estimator = c("mse_bc"),
                                            formula_y, data_sample,
@@ -109,5 +109,12 @@ construct_LMEintervals <- construct_intLME(model_obj,
                                            alpha = 0.05, n_boot = 100,
                                            boot_seed = 1)
 
+construct_LMEintervals_spb <- construct_intLME(model_obj,
+                                           type_method = c("semiparametric"),
+                                           type_var_estimator = c("mse_bc"),
+                                           formula_y, data_sample,
+                                           cluster_means = cluster_means, id_cluster,
+                                           alpha = 0.05, n_boot = 100,
+                                           boot_seed = 1)
 
 }
