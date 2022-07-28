@@ -1,5 +1,5 @@
 Package: SimInfLME
-Title: Individual and simultaneous confidence intervals for linear mixed effects
+Title: Confidence intervals for linear mixed effects
 Version: 1.0.1
 Authors@R: 
     person(given = "Katarzyna",
