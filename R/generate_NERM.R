@@ -6,14 +6,14 @@
 #' @param generate_u List to generate random effects, that is
 #' \itemize{
 #'  \item scaling_factor -- scaling factor
-#'  \item type -- distribution of random element, \code{chisquare}: chi-squared distribution,
+#'  \item type_dist -- distribution of random element, \code{chisquare}: chi-squared distribution,
 #'  \code{student_t}: Student's t-distribution, \code{normal}: normal distribution
 #'  \item dg -- degrees of freedom.
 #' }
 #' @param generate_e List to generate random effects, that is
 #' \itemize{
 #'  \item scaling_factor -- scaling factor
-#'  \item type -- distribution of random element, \code{chisquare}: chi-squared distribution,
+#'  \item type_dist -- distribution of random element, \code{chisquare}: chi-squared distribution,
 #'  \code{student_t}: Student's t-distribution, \code{normal}: normal distribution
 #'  \item dg -- degrees of freedom.
 #' }
@@ -49,10 +49,10 @@
 #' FUN = mean)[, -1])
 #'
 #' # Generate NERM sample ---------------------------------------------------------
-#' generate_samples <- generate_NERM(generate_u = list(type = "chisquared",
+#' generate_samples <- generate_NERM(generate_u = list(type_dist = "chisquared",
 #'                                                     scaling_factor = 1,
 #'                                                     dg = 6),
-#'                                   generate_e = list(type = "chisquared",
+#'                                   generate_e = list(type_dist = "chisquared",
 #'                                                     scaling_factor = 1,
 #'                                                     dg = 6),
 #'                                   beta = beta,
@@ -65,10 +65,10 @@
 #'
 
 
-generate_NERM <- function(generate_u = list(type = "chisquared",
+generate_NERM <- function(generate_u = list(type_dist = "chisquared",
                                             scaling_factor = 1,
                                             dg = 6),
-                          generate_e = list(type = "chisquared",
+                          generate_e = list(type_dist = "chisquared",
                                             scaling_factor = 1,
                                             dg = 6),
                           beta,
@@ -85,7 +85,7 @@ generate_NERM <- function(generate_u = list(type = "chisquared",
       n = length(as.numeric(table(id_cluster))),
       dg = generate_u$dg,
       scaling_factor = generate_u$scaling_factor,
-      type = generate_u$type,
+      type_dist = generate_u$type_dist,
       start_seed = start_seed
     )
     re_u_repeat <- rep(re_u, as.numeric(table(id_cluster)))
@@ -94,7 +94,7 @@ generate_NERM <- function(generate_u = list(type = "chisquared",
       n = dim(X)[1],
       dg = generate_e$dg,
       scaling_factor = generate_e$scaling_factor,
-      type = generate_e$type,
+      type_dist = generate_e$type_dist,
       start_seed = start_seed
     )
 

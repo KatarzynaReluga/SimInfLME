@@ -110,10 +110,10 @@ FUN = mean)[, -1])
 formula_y <-  y ~ -1 + X0 + X1 + (1| id_cluster)
 
 # Generate sample and fit NERM -------------------------------------------------
-data_sample <- generate_NERM(generate_u = list(type = "chisquared",
+data_sample <- generate_NERM(generate_u = list(type_dist = "chisquared",
                                                scaling_factor = 1,
                                                dg = 6),
-                             generate_e = list(type = "chisquared",
+                             generate_e = list(type_dist = "chisquared",
                                                scaling_factor = 1,
                                                dg = 6),
                              beta = beta,

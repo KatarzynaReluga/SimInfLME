@@ -59,7 +59,7 @@ beta = c(1, 1)
 cluster_means <- as.matrix(aggregate(X, list(id_cluster), FUN = mean)[, -1])
 
 # Formula to fit NERM ----------------------------------------------------------
- formula_y <-  y ~ -1 + X0 + X1 + (1| id_cluster)
+formula_y <-  y ~ -1 + X0 + X1 + (1| id_cluster)
 ```
 
 Second, we generate outcomes from NERM.

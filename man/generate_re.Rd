@@ -8,7 +8,7 @@ generate_re(
   n,
   dg = 5,
   scaling_factor,
-  type = c("chisquared", "student_t", "normal"),
+  type_dist = c("chisquared", "student_t", "normal"),
   start_seed = 1
 )
 }
@@ -19,7 +19,7 @@ generate_re(
 
 \item{scaling_factor}{Scaling factor}
 
-\item{type}{Distribution of random element, \code{chisquare}: chi-squared distribution,
+\item{type_dist}{Distribution of random element, \code{chisquare}: chi-squared distribution,
 \code{student_t}: Student's t-distribution, \code{normal}: normal distribution}
 
 \item{start_seed}{Seed to reproduce simulations}
@@ -36,7 +36,7 @@ Student's t or normal distributions
 # Generate scaled and centered Student's t-distributed random elements
 
 t_student_re <- generate_re(n = 100, dg = 6, scaling_factor = 1,
-type = "student_t")
+type_dist = "student_t")
 
 
 }

@@ -45,10 +45,10 @@
 #' formula_y <-  y ~ -1 + X0 + X1 + (1| id_cluster)
 #'
 #' # Generate sample and fit NERM -------------------------------------------------
-#' data_sample <- generate_NERM(generate_u = list(type = "chisquared",
+#' data_sample <- generate_NERM(generate_u = list(type_dist = "chisquared",
 #'                                                scaling_factor = 1,
 #'                                                dg = 6),
-#'                              generate_e = list(type = "chisquared",
+#'                              generate_e = list(type_dist = "chisquared",
 #'                                                scaling_factor = 1,
 #'                                                dg = 6),
 #'                              beta = beta,
@@ -124,9 +124,9 @@ bootstrap_NERM.parametric <- function(boot_object,
 
   generate_samples <-
     generate_NERM(
-      generate_u = list(type = "normal",
+      generate_u = list(type_dist = "normal",
                         scaling_factor = sqrt(var_u_est)),
-      generate_e = list(type = "normal",
+      generate_e = list(type_dist = "normal",
                         scaling_factor = sqrt(var_e_est)),
       beta = beta_est,
       X = X,
@@ -161,11 +161,11 @@ bootstrap_NERM.parametric <- function(boot_object,
     db_wrapper <- function(estimated_NERM_db) {
       generate_samples <- generate_NERM(
         generate_u = list(
-          type = "normal",
+          type_dist = "normal",
           scaling_factor = sqrt(estimated_NERM_db$var_u)
         ),
         generate_e = list(
-          type = "normal",
+          type_dist = "normal",
           scaling_factor = sqrt(estimated_NERM_db$var_e)
         ),
         beta = estimated_NERM_db$beta_hat,

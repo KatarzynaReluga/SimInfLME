@@ -52,10 +52,10 @@
 #' formula_y <-  y ~ -1 + X0 + X1 + (1| id_cluster)
 #'
 #' # Generate a sample from NERM ---------------------------------------------------
-#' data_sample <- generate_NERM(generate_u = list(type = "chisquared",
+#' data_sample <- generate_NERM(generate_u = list(type_dist = "chisquared",
 #'                                                scaling_factor = 1,
 #'                                                dg = 6),
-#'                              generate_e = list(type = "chisquared",
+#'                              generate_e = list(type_dist = "chisquared",
 #'                                                scaling_factor = 1,
 #'                                                dg = 6),
 #'                              beta = beta,
@@ -163,10 +163,10 @@ construct_intervals <- function(type_method = c("parametric",
 #' #Formula to construct intervals
 #' formula_y <-  y ~ -1 + X0 + X1 + (1| id_cluster)
 #'
-#' data_sample <- generate_NERM(generate_u = list(type = "chisquared",
+#' data_sample <- generate_NERM(generate_u = list(type_dist = "chisquared",
 #'                                                scaling_factor = 1,
 #'                                                dg = 6),
-#'                              generate_e = list(type = "chisquared",
+#'                              generate_e = list(type_dist = "chisquared",
 #'                                                scaling_factor = 1,
 #'                                                dg = 6),
 #'                              beta = beta,

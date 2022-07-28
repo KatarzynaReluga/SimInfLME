@@ -5,8 +5,8 @@
 \title{Generate NERM samples}
 \usage{
 generate_NERM(
-  generate_u = list(type = "chisquared", scaling_factor = 1, dg = 6),
-  generate_e = list(type = "chisquared", scaling_factor = 1, dg = 6),
+  generate_u = list(type_dist = "chisquared", scaling_factor = 1, dg = 6),
+  generate_e = list(type_dist = "chisquared", scaling_factor = 1, dg = 6),
   beta,
   X,
   cluster_means,
@@ -20,7 +20,7 @@ generate_NERM(
 \item{generate_u}{List to generate random effects, that is
 \itemize{
 \item scaling_factor -- scaling factor
-\item type -- distribution of random element, \code{chisquare}: chi-squared distribution,
+\item type_dist -- distribution of random element, \code{chisquare}: chi-squared distribution,
 \code{student_t}: Student's t-distribution, \code{normal}: normal distribution
 \item dg -- degrees of freedom.
 }}
@@ -28,7 +28,7 @@ generate_NERM(
 \item{generate_e}{List to generate random effects, that is
 \itemize{
 \item scaling_factor -- scaling factor
-\item type -- distribution of random element, \code{chisquare}: chi-squared distribution,
+\item type_dist -- distribution of random element, \code{chisquare}: chi-squared distribution,
 \code{student_t}: Student's t-distribution, \code{normal}: normal distribution
 \item dg -- degrees of freedom.
 }}
@@ -73,10 +73,10 @@ list(id_cluster),
 FUN = mean)[, -1])
 
 # Generate NERM sample ---------------------------------------------------------
-generate_samples <- generate_NERM(generate_u = list(type = "chisquared",
+generate_samples <- generate_NERM(generate_u = list(type_dist = "chisquared",
                                                     scaling_factor = 1,
                                                     dg = 6),
-                                  generate_e = list(type = "chisquared",
+                                  generate_e = list(type_dist = "chisquared",
                                                     scaling_factor = 1,
                                                     dg = 6),
                                   beta = beta,
